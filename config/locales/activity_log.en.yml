@@ -1,0 +1,14 @@
+en:
+  activity_log:
+    actions:
+      create: "%{type} #%{id} was created"
+      update: "%{type} #%{id} was updated"
+      delete: "%{type} #%{id} was deleted"
+      custom: "Custom action on %{type} #%{id}"
+
+    attributes:
+      action: "Action"
+      loggable_type: "Entity Type"
+      loggable_id: "Entity ID"
+      user_id: "User"
+      created_at: "Date"

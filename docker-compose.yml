@@ -19,6 +19,7 @@ services:
       - ORACLE_PASSWORD=password123
       - MONGO_HOST=mongo-db
       - MONGO_PORT=27017
+      - MONGO_DATABASE=invoices_logs
     depends_on:
       - oracle-db
       - mongo-db
@@ -45,7 +46,7 @@ services:
   mongo-db:
     image: mongo:latest
     environment:
-      MONGO_INITDB_DATABASE: invoices_manager_development
+      MONGO_INITDB_DATABASE: invoices_logs
     ports:
       - "27017:27017"
     volumes:
