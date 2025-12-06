@@ -61,6 +61,10 @@ GEM
       activemodel (= 7.1.6)
       activesupport (= 7.1.6)
       timeout (>= 0.4.0)
+    activerecord-oracle_enhanced-adapter (7.1.1)
+      activerecord (~> 7.1.0)
+      ruby-oci8
+      ruby-plsql (>= 0.6.0)
     activestorage (7.1.6)
       actionpack (= 7.1.6)
       activejob (= 7.1.6)
@@ -85,18 +89,18 @@ GEM
     bigdecimal (3.3.1)
     bootsnap (1.19.0)
       msgpack (~> 1.2)
+    bson (5.2.0)
     builder (3.3.0)
     cgi (0.5.0)
     concurrent-ruby (1.3.5)
-    connection_pool (2.5.5)
+    connection_pool (3.0.2)
     crass (1.0.6)
     date (3.5.0)
     debug (1.11.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
     drb (2.2.3)
-    erb (4.0.4)
-      cgi (>= 0.3.3)
+    erb (6.0.0)
     erubi (1.13.1)
     globalid (1.3.0)
       activesupport (>= 6.1)
@@ -119,11 +123,18 @@ GEM
       net-smtp
     marcel (1.1.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
-    minitest (5.26.1)
+    minitest (5.26.2)
+    mongo (2.22.0)
+      base64
+      bson (>= 4.14.1, < 6.0.0)
+    mongoid (8.1.11)
+      activemodel (>= 5.1, < 8.1, != 7.0.0)
+      concurrent-ruby (>= 1.0.5, < 2.0)
+      mongo (>= 2.18.0, < 3.0.0)
+      ruby2_keywords (~> 0.0.5)
     msgpack (1.8.0)
     mutex_m (0.3.0)
-    net-imap (0.4.22)
+    net-imap (0.5.12)
       date
       net-protocol
     net-pop (0.1.2)
@@ -133,9 +144,7 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.5)
-    nokogiri (1.15.7-x86_64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.15.7-x86_64-linux)
+    nokogiri (1.18.10-x86_64-linux-gnu)
       racc (~> 1.4)
     pp (0.6.3)
       prettyprint
@@ -143,7 +152,7 @@ GEM
     psych (5.2.6)
       date
       stringio
-    puma (6.6.1)
+    puma (7.1.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.4)
@@ -192,9 +201,10 @@ GEM
       tsort
     reline (0.6.3)
       io-console (~> 0.5)
-    securerandom (0.3.2)
-    sqlite3 (1.7.3)
-      mini_portile2 (~> 2.8.0)
+    ruby-oci8 (2.2.14)
+    ruby-plsql (0.8.0)
+    ruby2_keywords (0.0.5)
+    securerandom (0.4.1)
     stringio (3.1.9)
     thor (1.4.0)
     timeout (0.4.4)
@@ -205,22 +215,23 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.6.18)
+    zeitwerk (2.7.3)
 
 PLATFORMS
-  x86_64-darwin-21
   x86_64-linux
 
 DEPENDENCIES
+  activerecord-oracle_enhanced-adapter (~> 7.0)
   bootsnap
   debug
+  mongoid (~> 8.0)
   puma (>= 5.0)
   rails (~> 7.1.5)
-  sqlite3 (>= 1.4)
+  ruby-oci8 (~> 2.2)
   tzinfo-data
 
 RUBY VERSION
-   ruby 2.7.6p219
+   ruby 3.2.2p53
 
 BUNDLED WITH
-   2.3.7
+   2.4.10

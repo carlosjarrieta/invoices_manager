@@ -1,0 +1,25 @@
+# Mongoid Configuration
+# Uses environment variables for connection settings
+#
+# For Docker: Variables are set in docker-compose.yml
+# For local development: Variables are loaded from .env.development
+
+development:
+  clients:
+    default:
+      database: <%= ENV.fetch("MONGO_DATABASE", "invoices_manager_development") %>
+      hosts:
+        - <%= ENV.fetch("MONGO_HOST", "localhost") %>:<%= ENV.fetch("MONGO_PORT", "27017") %>
+      options:
+        server_selection_timeout: 5
+
+test:
+  clients:
+    default:
+      database: invoices_manager_test
+      hosts:
+        - <%= ENV.fetch("MONGO_HOST", "localhost") %>:<%= ENV.fetch("MONGO_PORT", "27017") %>
+      options:
+        read:
+          mode: :primary
+        max_pool_size: 1

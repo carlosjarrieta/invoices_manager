@@ -1,12 +1,20 @@
 source "https://rubygems.org"
 
-ruby "2.7.6"
+ruby "3.2.2"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.5"
 
-# Use sqlite3 as the database for Active Record
-gem "sqlite3", ">= 1.4"
+# Use Oracle as the primary database
+gem "activerecord-oracle_enhanced-adapter", "~> 7.0"
+gem "ruby-oci8", "~> 2.2"
+
+# Use MongoDB for document storage
+gem "mongoid", "~> 8.0"
+
+# Load environment variables from .env files
+gem "dotenv-rails", groups: [:development, :test]
+
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"

@@ -1,25 +1,29 @@
-# SQLite. Versions 3.8.0 and up are supported.
-#   gem install sqlite3
+# Oracle Database Configuration
+# Uses oracle_enhanced adapter with environment variables
 #
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem "sqlite3"
+# For Docker: Variables are set in docker-compose.yml
+# For local development: Variables are loaded from .env.development
 #
 default: &default
-  adapter: sqlite3
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+  adapter: oracle_enhanced
+  host: <%= ENV.fetch("ORACLE_HOST", "localhost") %>
+  port: <%= ENV.fetch("ORACLE_PORT", "1521") %>
+  database: <%= ENV.fetch("ORACLE_DATABASE", "XEPDB1") %>
+  username: <%= ENV.fetch("ORACLE_USERNAME", "system") %>
+  password: <%= ENV.fetch("ORACLE_PASSWORD", "password123") %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
 
 development:
   <<: *default
-  database: storage/development.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: storage/test.sqlite3
+  database: <%= ENV.fetch("ORACLE_DATABASE", "XEPDB1") %>
 
 production:
   <<: *default
-  database: storage/production.sqlite3
+  # Production should use different credentials
+  # Set these in your production environment variables
