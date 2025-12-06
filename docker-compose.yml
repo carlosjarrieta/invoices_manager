@@ -28,7 +28,7 @@ services:
 
   # Base de datos Oracle
   oracle-db:
-    image: gvenzl/oracle-xe:21-slim
+    image: gvenzl/oracle-free:23-slim
     environment:
       ORACLE_PASSWORD: password123
       ORACLE_DATABASE: XEPDB1
