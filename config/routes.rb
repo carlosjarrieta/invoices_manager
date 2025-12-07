@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       post 'auth/login', to: 'authentication#login'
 
       # Microservice Endpoint: Create Invoice
-      resources :invoices, only: %i[index create show]
+      resources :invoices, only: %i[index create show update]
 
       # Microservice Endpoint: Clients
       get 'clients/search_by_nit', to: 'clients#search_by_nit'

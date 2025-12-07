@@ -94,6 +94,24 @@ module Api
         end
       end
 
+      # PUT/PATCH /api/v1/invoices/:id
+      def update
+        repository = Invoicing::Infrastructure::InvoiceRepository.new
+        audit_service = AuditAdapter.new(request.remote_ip)
+
+        use_case = Invoicing::UseCases::UpdateInvoice.new(repository, audit_service)
+
+        result = use_case.execute(params[:id], params)
+
+        if result[:status] == :ok
+          render json: result, status: :ok
+        elsif result[:status] == :not_found
+          render json: { error: result[:message] }, status: :not_found
+        else
+          render json: { error: result[:message] }, status: :unprocessable_entity
+        end
+      end
+
       # GET /api/v1/invoices/:id
       def show
         render json: { data: @invoice.as_json(include: :client) }

@@ -9,6 +9,7 @@ en:
       updated: "Client updated successfully"
     invoices:
       created: "Invoice created successfully"
+      updated: "Invoice updated successfully"
       invalid_date_format: "Invalid date format. Use YYYY-MM-DD"
       invalid_data: "Invalid data: Amount must be positive and client valid"
       client_not_found: "Client not found"
