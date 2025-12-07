@@ -14,7 +14,7 @@ gem 'mongoid', '~> 8.0'
 
 # Load environment variables from .env files
 gem 'dotenv-rails', groups: [:development, :test]
-
+gem 'jwt', '~> 3.1'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '>= 5.0'
@@ -43,6 +43,9 @@ group :development do
   gem 'pry-nav', '~> 1.0' 
   gem 'bullet', '~> 8.1'
 end
+
+
+
 
 
 

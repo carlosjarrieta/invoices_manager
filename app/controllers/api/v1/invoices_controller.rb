@@ -1,4 +1,7 @@
-class InvoicesController < ApplicationController
+module Api
+  module V1
+    class InvoicesController < ApplicationController
+
   # Temporary Stub for Audit Service (We will replace this later with real Mongo connection)
   class AuditServiceStub
     def log(action, data)
@@ -33,5 +36,7 @@ class InvoicesController < ApplicationController
     else
       render json: result, status: :unprocessable_entity
     end
+  end
+end
   end
 end
