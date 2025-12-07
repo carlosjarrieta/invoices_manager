@@ -65,16 +65,16 @@
         },
         {
           "_type": "request",
-          "name": "Get Client by ID",
+          "name": "Get Client by ID (with Invoices)",
           "method": "GET",
-          "url": "{{ _.base_url }}/api/v1/clients/1",
+          "url": "{{ _.base_url }}/api/v1/clients/1?page=1&per_page=10",
           "headers": [
             {
               "name": "Authorization",
               "value": "Bearer {{ _.jwt_token }}"
             }
           ],
-          "description": "Retrieve a specific client by ID"
+          "description": "Retrieve a specific client by ID with their invoices paginated"
         },
         {
           "_type": "request",
@@ -88,6 +88,19 @@
             }
           ],
           "description": "Search for a client by NIT (Tax ID)"
+        },
+        {
+          "_type": "request",
+          "name": "List Invoices (Filter & Pagination)",
+          "method": "GET",
+          "url": "{{ _.base_url }}/api/v1/invoices?page=1&per_page=10",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ _.jwt_token }}"
+            }
+          ],
+          "description": "Get paginated list of invoices. Defaults to current day if dates are not provided."
         },
         {
           "_type": "request",
@@ -109,6 +122,19 @@
             "text": "{\n  \"client_id\": 1,\n  \"amount\": 150000.50\n}"
           },
           "description": "Create a new invoice. Validates client existence and amount > 0"
+        },
+        {
+          "_type": "request",
+          "name": "Get Invoice by ID",
+          "method": "GET",
+          "url": "{{ _.base_url }}/api/v1/invoices/1",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ _.jwt_token }}"
+            }
+          ],
+          "description": "Get specific invoice details including client info"
         },
         {
           "_type": "request_group",
