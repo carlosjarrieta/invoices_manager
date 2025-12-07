@@ -17,6 +17,7 @@ services:
       - ORACLE_HOST=oracle-db
       - ORACLE_PORT=1521
       - ORACLE_PASSWORD=password123
+      - NLS_LANG=AMERICAN_AMERICA.AL32UTF8
       - MONGO_HOST=mongo-db
       - MONGO_PORT=27017
       - MONGO_DATABASE=invoices_logs
@@ -32,6 +33,7 @@ services:
     environment:
       ORACLE_PASSWORD: password123
       ORACLE_DATABASE: XEPDB1
+      NLS_LANG: AMERICAN_AMERICA.AL32UTF8
     ports:
       - "1521:1521"
     volumes:

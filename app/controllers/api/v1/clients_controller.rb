@@ -15,7 +15,7 @@ module Api
             entity: 'Client',
             entity_id: @client.id,
             details: @client.as_json,
-            performed_by: 'API' # We could extract ApiClient name here if available
+            performed_by: 'API'
           )
           render json: @client, status: :created
         else
