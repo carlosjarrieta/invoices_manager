@@ -51,7 +51,8 @@ module Invoicing
         end
 
         # Async Audit Log - Success
-        @audit_service.log('Invoice Created', { client_id: invoice.client_id, amount: invoice.amount }, 'SUCCESS')
+        @audit_service.log('Invoice Created', { id: result.id, client_id: invoice.client_id, amount: invoice.amount },
+                           'SUCCESS')
         { status: :ok, message: I18n.t('api.invoices.created'), data: result }
       end
     end

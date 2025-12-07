@@ -4,24 +4,6 @@ module Api
       include Authenticable
       before_action :set_invoice, only: [:show]
 
-      # Adapter to make our Rails AuditService compatible with the Clean Architecture Use Case interface
-      class AuditAdapter
-        def initialize(ip_address)
-          @ip_address = ip_address
-        end
-
-        def log(action, data, status = 'SUCCESS')
-          AuditService.log(
-            action: action,
-            entity: 'Invoice',
-            entity_id: data[:client_id], # Ideally we'd have the invoice ID here
-            details: data,
-            ip_address: @ip_address,
-            status: status
-          )
-        end
-      end
-
       # GET /api/v1/invoices?page=1&per_page=10&start_date=2023-01-01&end_date=2023-12-31
       def index
         page = params[:page] || 1
@@ -69,7 +51,8 @@ module Api
         client_gateway = Invoicing::Infrastructure::ClientGateway.new
 
         # Use real Mongo Audit and inject Request IP
-        audit_service = AuditAdapter.new(request.remote_ip)
+        # Now using the extracted Infrastructure class
+        audit_service = Invoicing::Infrastructure::AuditAdapter.new(request.remote_ip)
 
         # 2. Initialize Use Case
         use_case = Invoicing::UseCases::CreateInvoice.new(repository, audit_service, client_gateway)
@@ -97,7 +80,7 @@ module Api
       # PUT/PATCH /api/v1/invoices/:id
       def update
         repository = Invoicing::Infrastructure::InvoiceRepository.new
-        audit_service = AuditAdapter.new(request.remote_ip)
+        audit_service = Invoicing::Infrastructure::AuditAdapter.new(request.remote_ip)
 
         use_case = Invoicing::UseCases::UpdateInvoice.new(repository, audit_service)
 
