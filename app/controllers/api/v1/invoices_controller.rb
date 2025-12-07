@@ -45,6 +45,8 @@ module Api
 
         # 4. Return JSON response based on result
         if result[:status] == :ok
+          # Include client data in the response
+          result[:data] = result[:data].as_json(include: :client)
           render json: result, status: :created
         else
           render json: result, status: :unprocessable_entity
