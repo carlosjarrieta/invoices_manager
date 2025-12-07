@@ -33,7 +33,7 @@ module Api
       def set_client
         @client = Client.find(params[:id])
       rescue ActiveRecord::RecordNotFound
-        render json: { error: 'Client not found' }, status: :not_found
+        render json: { error: I18n.t('api.clients.not_found') }, status: :not_found
       end
 
       def client_params

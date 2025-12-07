@@ -1,31 +1,50 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  api:
+    authentication:
+      invalid_api_key: "Invalid API Key"
+      login_success: "Login successful"
+    clients:
+      created: "Client created successfully"
+      not_found: "Client not found"
+      updated: "Client updated successfully"
+    invoices:
+      created: "Invoice created successfully"
+      invalid_data: "Invalid data: Amount must be positive and client valid"
+      client_not_found: "Client not found"
+      database_error: "Database error"
+    errors:
+      unauthorized: "Unauthorized"
+      unprocessable_entity: "Unprocessable entity"
+  activerecord:
+    models:
+      client: "Client"
+      invoice: "Invoice"
+      api_client: "API Client"
+    attributes:
+      client:
+        company_name: "Company Name"
+        nit: "Tax ID (NIT)"
+        email: "Email"
+        address: "Address"
+      invoice:
+        client_id: "Client"
+        amount: "Amount"
+        issue_date: "Issue Date"
+      api_client:
+        name: "Name"
+        api_key: "API Key"
+    errors:
+      models:
+        client:
+          attributes:
+            company_name:
+              blank: "Company name can't be blank"
+            nit:
+              blank: "NIT can't be blank"
+              taken: "NIT has already been taken"
+            email:
+              blank: "Email can't be blank"
+              taken: "Email has already been taken"
+              invalid: "Email is invalid"
+            address:
+              blank: "Address can't be blank"
