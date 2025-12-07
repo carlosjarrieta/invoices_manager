@@ -2,6 +2,7 @@ module Api
   module V1
     class InvoicesController < ApplicationController
       include Authenticable
+      before_action :set_invoice, only: [:show]
 
       # Adapter to make our Rails AuditService compatible with the Clean Architecture Use Case interface
       class AuditAdapter
@@ -10,8 +11,6 @@ module Api
         end
 
         def log(action, data, status = 'SUCCESS')
-          # Map Clean Arch params to our Service params
-          # The Use Case sends (action, data hash, status)
           AuditService.log(
             action: action,
             entity: 'Invoice',
@@ -50,6 +49,19 @@ module Api
         else
           render json: result, status: :unprocessable_entity
         end
+      end
+
+      # GET /api/v1/invoices/:id
+      def show
+        render json: { data: @invoice }
+      end
+
+      private
+
+      def set_invoice
+        @invoice = Invoice.find(params[:id])
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: I18n.t('api.invoices.not_found') }, status: :not_found
       end
     end
   end

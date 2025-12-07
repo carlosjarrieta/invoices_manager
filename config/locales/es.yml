@@ -11,6 +11,7 @@ es:
       created: "Factura creada exitosamente"
       invalid_data: "Datos inválidos: El monto debe ser positivo y el cliente válido"
       client_not_found: "Cliente no encontrado"
+      not_found: "Factura no encontrada"
       database_error: "Error de base de datos"
     errors:
       unauthorized: "No autorizado"
