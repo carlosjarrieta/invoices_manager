@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_06_165828) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_07_152753) do
+  create_table "api_clients", force: :cascade do |t|
+    t.string "name"
+    t.string "api_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_key"], name: "index_api_clients_on_api_key", unique: true
+  end
+
   create_table "aq$_schedules", primary_key: ["oid", "destination"], force: :cascade do |t|
     t.raw "oid", limit: 16, null: false
     t.string "destination", limit: 390, null: false
@@ -21,6 +29,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_06_165828) do
     t.date "last_time"
     t.decimal "jobno"
     t.index ["jobno"], name: "aq$_schedules_check", unique: true
+  end
+
+  create_table "clients", force: :cascade do |t|
+    t.string "company_name", null: false
+    t.string "nit", null: false
+    t.string "email", null: false
+    t.string "address", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_clients_on_email", unique: true
+    t.index ["nit"], name: "index_clients_on_nit", unique: true
   end
 
   create_table "help", primary_key: ["topic", "seq"], force: :cascade do |t|
