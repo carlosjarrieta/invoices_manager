@@ -41,7 +41,31 @@ module Api
 
       # GET /api/v1/clients/:id
       def show
-        render json: @client
+        page = params[:page] || 1
+        per_page = params[:per_page] || 10
+        per_page = [per_page.to_i, 50].min
+
+        # Get client invoices paginated
+        invoices = @client.invoices.order(created_at: :desc)
+                          .offset((page.to_i - 1) * per_page)
+                          .limit(per_page)
+
+        total_invoices = @client.invoices.count
+        total_pages = (total_invoices.to_f / per_page).ceil
+
+        render json: {
+          data: @client.as_json.merge(
+            invoices: {
+              data: invoices,
+              meta: {
+                current_page: page.to_i,
+                per_page: per_page.to_i,
+                total_count: total_invoices,
+                total_pages: total_pages
+              }
+            }
+          )
+        }
       end
 
       # GET /api/v1/clients/search_by_nit?nit=900123456-7
