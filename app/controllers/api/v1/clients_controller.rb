@@ -8,7 +8,7 @@ module Api
       # GET /api/v1/clients
       def index
         @clients = Client.all
-        render json: @clients
+        render json: { data: @clients }
       end
 
       # POST /api/v1/clients
