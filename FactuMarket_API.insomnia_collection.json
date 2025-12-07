@@ -31,6 +31,19 @@
         },
         {
           "_type": "request",
+          "name": "List All Clients",
+          "method": "GET",
+          "url": "{{ _.base_url }}/api/v1/clients",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ _.jwt_token }}"
+            }
+          ],
+          "description": "Get list of all clients"
+        },
+        {
+          "_type": "request",
           "name": "Create Client",
           "method": "POST",
           "url": "{{ _.base_url }}/api/v1/clients",
@@ -62,6 +75,19 @@
             }
           ],
           "description": "Retrieve a specific client by ID"
+        },
+        {
+          "_type": "request",
+          "name": "Search Client by NIT",
+          "method": "GET",
+          "url": "{{ _.base_url }}/api/v1/clients/search_by_nit?nit=900123456-7",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ _.jwt_token }}"
+            }
+          ],
+          "description": "Search for a client by NIT (Tax ID)"
         },
         {
           "_type": "request",

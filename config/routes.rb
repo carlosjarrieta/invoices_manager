@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       post 'invoices', to: 'invoices#create'
 
       # Microservice Endpoint: Clients
+      get 'clients/search_by_nit', to: 'clients#search_by_nit'
       resources :clients, except: :destroy
     end
   end
