@@ -1,24 +1,25 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Utils commands
 
-Things you may want to cover:
+# 1. Bajar todo y eliminar volúmenes
+docker-compose down -v
 
-* Ruby version
+# 2. Limpiar imágenes huérfanas y caché de build
+docker image prune -f
+docker builder prune -f
 
-* System dependencies
+# 3. Reconstruir desde cero (sin caché)
+docker-compose build --no-cache
 
-* Configuration
+# 4. Levantar los servicios
+docker-compose up -d
 
-* Database creation
+# 5. Esperar a que Oracle esté listo (puede tardar ~30 segundos)
+# Puedes verificar con: docker-compose logs oracle-db
 
-* Database initialization
+# 6. Correr las migraciones
+docker-compose exec web bundle exec rails db:migrate
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+# 7. Crear el ApiClient de prueba
+docker-compose exec web bundle exec rails runner "ApiClient.create(name: 'Test App', api_key: 'secret123')"

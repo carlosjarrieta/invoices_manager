@@ -1,4 +1,3 @@
-```ruby
 module Api
   module V1
     class InvoicesController < ApplicationController
@@ -22,15 +21,14 @@ module Api
       # POST /api/v1/invoices
       def create
         # 1. Initialize Infrastructure dependencies
-        # We use      # 1. Initialize Infrastructure dependencies
-      repository = Invoicing::Infrastructure::InvoiceRepository.new
-      client_gateway = Invoicing::Infrastructure::ClientGateway.new
-      
-      # Use real Mongo Audit
-      audit_service = AuditAdapter.new
+        repository = Invoicing::Infrastructure::InvoiceRepository.new
+        client_gateway = Invoicing::Infrastructure::ClientGateway.new
 
-      # 2. Initialize Use Case
-      use_case = Invoicing::UseCases::CreateInvoice.new(repository, audit_service, client_gateway)
+        # Use real Mongo Audit
+        audit_service = AuditAdapter.new
+
+        # 2. Initialize Use Case
+        use_case = Invoicing::UseCases::CreateInvoice.new(repository, audit_service, client_gateway)
 
         # 3. Execute the logic
         # We extract strictly what we need from params

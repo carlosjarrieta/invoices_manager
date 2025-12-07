@@ -43,9 +43,8 @@ ENV LD_LIBRARY_PATH=/usr/lib/oracle/21/client64/lib:$LD_LIBRARY_PATH \
     ORACLE_HOME=/usr/lib/oracle/21/client64
 
 # Install application gems
-COPY Gemfile ./
-RUN bundle lock && \
-    bundle install && \
+COPY Gemfile Gemfile.lock ./
+RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
