@@ -8,6 +8,8 @@ class AuditLog
   field :entity_id, type: String
   field :details, type: Hash
   field :performed_by, type: String # To store basic info about usage
+  field :ip_address, type: String
+  field :status, type: String, default: 'SUCCESS' # SUCCESS or ERROR
 
   # Index for faster queries
   index({ created_at: -1 })

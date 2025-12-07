@@ -5,15 +5,20 @@ module Api
 
       # Adapter to make our Rails AuditService compatible with the Clean Architecture Use Case interface
       class AuditAdapter
-        def log(action, data)
+        def initialize(ip_address)
+          @ip_address = ip_address
+        end
+
+        def log(action, data, status = 'SUCCESS')
           # Map Clean Arch params to our Service params
-          # The Use Case sends (action, data hash)
-          # We assume data contains entity info if needed, or we log generic
+          # The Use Case sends (action, data hash, status)
           AuditService.log(
             action: action,
             entity: 'Invoice',
-            entity_id: data[:client_id], # Ideally we'd have the invoice ID here, but Use Case returns it after. Let's start basic.
-            details: data
+            entity_id: data[:client_id], # Ideally we'd have the invoice ID here
+            details: data,
+            ip_address: @ip_address,
+            status: status
           )
         end
       end
@@ -24,8 +29,8 @@ module Api
         repository = Invoicing::Infrastructure::InvoiceRepository.new
         client_gateway = Invoicing::Infrastructure::ClientGateway.new
 
-        # Use real Mongo Audit
-        audit_service = AuditAdapter.new
+        # Use real Mongo Audit and inject Request IP
+        audit_service = AuditAdapter.new(request.remote_ip)
 
         # 2. Initialize Use Case
         use_case = Invoicing::UseCases::CreateInvoice.new(repository, audit_service, client_gateway)

@@ -109,6 +109,51 @@
             "text": "{\n  \"client_id\": 1,\n  \"amount\": 150000.50\n}"
           },
           "description": "Create a new invoice. Validates client existence and amount > 0"
+        },
+        {
+          "_type": "request_group",
+          "name": "Audit Logs",
+          "children": [
+            {
+              "_type": "request",
+              "name": "List Audit Logs (Paginated)",
+              "method": "GET",
+              "url": "{{ _.base_url }}/api/v1/audit_logs?page=1&per_page=10",
+              "headers": [
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{ _.jwt_token }}"
+                }
+              ],
+              "description": "Get all audit logs with pagination"
+            },
+            {
+              "_type": "request",
+              "name": "Get Audit Log by ID",
+              "method": "GET",
+              "url": "{{ _.base_url }}/api/v1/audit_logs/ID_HERE",
+              "headers": [
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{ _.jwt_token }}"
+                }
+              ],
+              "description": "Retrieve specific audit log"
+            },
+            {
+              "_type": "request",
+              "name": "Filter Audit Logs by Entity",
+              "method": "GET",
+              "url": "{{ _.base_url }}/api/v1/audit_logs/by_entity?entity=Client&page=1",
+              "headers": [
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{ _.jwt_token }}"
+                }
+              ],
+              "description": "Filter logs by Entity type"
+            }
+          ]
         }
       ]
     }

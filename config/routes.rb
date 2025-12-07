@@ -11,6 +11,10 @@ Rails.application.routes.draw do
       # Microservice Endpoint: Clients
       get 'clients/search_by_nit', to: 'clients#search_by_nit'
       resources :clients, except: :destroy
+
+      # Audit Logs
+      get 'audit_logs/by_entity', to: 'audit_logs#by_entity'
+      resources :audit_logs, only: %i[index show]
     end
   end
 end
