@@ -1,9 +1,10 @@
 module Invoicing
   module UseCases
     class UpdateInvoice
-      def initialize(repository, audit_service)
+      def initialize(repository, audit_service, client_service)
         @repo = repository
         @audit_service = audit_service
+        @client_service = client_service
       end
 
       def execute(invoice_id, params)
@@ -14,7 +15,7 @@ module Invoicing
           return { status: :not_found, message: I18n.t('api.invoices.not_found') }
         end
 
-        old_attributes = invoice.attributes.slice('amount', 'issue_date')
+        old_attributes = invoice.attributes.slice('amount', 'issue_date', 'client_id')
 
         # Update attributes safely
         invoice.amount = params[:amount] if params[:amount].present?
@@ -24,10 +25,20 @@ module Invoicing
           nil
         end
 
+        # Validate Client if changing
+        if params[:client_id].present? && params[:client_id].to_s != invoice.client_id.to_s
+          unless @client_service.exists?(params[:client_id])
+            @audit_service.log('Invoice Update Failed', { error: 'Client not found', client_id: params[:client_id] },
+                               'ERROR')
+            return { status: :unprocessable_entity, message: I18n.t('api.invoices.client_not_found') }
+          end
+          invoice.client_id = params[:client_id]
+        end
+
         if invoice.save
           changes = {
             before: old_attributes,
-            after: invoice.attributes.slice('amount', 'issue_date')
+            after: invoice.attributes.slice('amount', 'issue_date', 'client_id')
           }
 
           @audit_service.log('Invoice Updated', { invoice_id: invoice.id, changes: changes }, 'SUCCESS')

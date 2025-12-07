@@ -81,8 +81,9 @@ module Api
       def update
         repository = Invoicing::Infrastructure::InvoiceRepository.new
         audit_service = Invoicing::Infrastructure::AuditAdapter.new(request.remote_ip)
+        client_gateway = Invoicing::Infrastructure::ClientGateway.new
 
-        use_case = Invoicing::UseCases::UpdateInvoice.new(repository, audit_service)
+        use_case = Invoicing::UseCases::UpdateInvoice.new(repository, audit_service, client_gateway)
 
         result = use_case.execute(params[:id], params)
 
