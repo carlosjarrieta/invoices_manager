@@ -1,4 +1,3 @@
-# app/models/audit_log.rb
 class AuditLog
   include Mongoid::Document
   include Mongoid::Timestamps
