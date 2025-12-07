@@ -13,8 +13,6 @@ module Authenticable
 
     begin
       @decoded = JsonWebToken.decode(token)
-      # You can fetch the current api client here if needed
-      # @current_api_client = ApiClient.find(@decoded[:api_client_id])
     rescue ActiveRecord::RecordNotFound, JWT::DecodeError
       render json: { errors: I18n.t('api.errors.unauthorized') }, status: :unauthorized
     end
