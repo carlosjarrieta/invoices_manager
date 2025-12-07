@@ -22,6 +22,46 @@ module Api
         end
       end
 
+      # GET /api/v1/invoices?page=1&per_page=10&start_date=2023-01-01&end_date=2023-12-31
+      def index
+        page = params[:page] || 1
+        per_page = params[:per_page] || 10
+        per_page = [per_page.to_i, 100].min
+
+        query = Invoice.includes(:client).order(created_at: :desc)
+
+        start_date = if params[:start_date].present?
+                       Date.parse(params[:start_date])
+                     else
+                       Date.current
+                     end
+
+        end_date = if params[:end_date].present?
+                     Date.parse(params[:end_date])
+                   else
+                     Date.current
+                   end
+
+        query = query.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
+
+        invoices = query.offset((page.to_i - 1) * per_page).limit(per_page)
+
+        total_count = query.count
+        total_pages = (total_count.to_f / per_page).ceil
+
+        render json: {
+          data: invoices.as_json(include: {
+                                   client: { only: %i[id company_name email] }
+                                 }),
+          meta: {
+            current_page: page.to_i,
+            per_page: per_page.to_i,
+            total_count: total_count,
+            total_pages: total_pages
+          }
+        }
+      end
+
       # POST /api/v1/invoices
       def create
         # 1. Initialize Infrastructure dependencies
