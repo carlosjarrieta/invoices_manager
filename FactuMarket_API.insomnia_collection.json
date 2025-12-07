@@ -1,0 +1,90 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "resources": [
+    {
+      "_type": "request_group",
+      "name": "FactuMarket API",
+      "description": "Microservices API for Invoice Management",
+      "environment": {
+        "base_url": "http://localhost:3000",
+        "api_key": "YOUR_API_KEY_HERE",
+        "jwt_token": ""
+      },
+      "children": [
+        {
+          "_type": "request",
+          "name": "Login - Get JWT Token",
+          "method": "POST",
+          "url": "{{ _.base_url }}/api/v1/auth/login",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mimeType": "application/json",
+            "text": "{\n  \"api_key\": \"{{ _.api_key }}\"\n}"
+          },
+          "description": "Authenticate with API Key to receive JWT token"
+        },
+        {
+          "_type": "request",
+          "name": "Create Client",
+          "method": "POST",
+          "url": "{{ _.base_url }}/api/v1/clients",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ _.jwt_token }}"
+            }
+          ],
+          "body": {
+            "mimeType": "application/json",
+            "text": "{\n  \"client\": {\n    \"company_name\": \"Panadería Don Pedro\",\n    \"nit\": \"900123456-7\",\n    \"email\": \"contacto@panaderiadonpedro.com\",\n    \"address\": \"Calle 123 #45-67, Bogotá\"\n  }\n}"
+          },
+          "description": "Create a new client in the system"
+        },
+        {
+          "_type": "request",
+          "name": "Get Client by ID",
+          "method": "GET",
+          "url": "{{ _.base_url }}/api/v1/clients/1",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ _.jwt_token }}"
+            }
+          ],
+          "description": "Retrieve a specific client by ID"
+        },
+        {
+          "_type": "request",
+          "name": "Create Invoice",
+          "method": "POST",
+          "url": "{{ _.base_url }}/api/v1/invoices",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ _.jwt_token }}"
+            }
+          ],
+          "body": {
+            "mimeType": "application/json",
+            "text": "{\n  \"client_id\": 1,\n  \"amount\": 150000.50\n}"
+          },
+          "description": "Create a new invoice. Validates client existence and amount > 0"
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   # API V1 Routes
   namespace :api do
     namespace :v1 do
+      # Auth Endpoint
+      post 'auth/login', to: 'authentication#login'
+
       # Microservice Endpoint: Create Invoice
       post 'invoices', to: 'invoices#create'
 

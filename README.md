@@ -22,4 +22,10 @@ docker-compose up -d
 docker-compose exec web bundle exec rails db:migrate
 
 # 7. Crear el ApiClient de prueba
-docker-compose exec web bundle exec rails runner "ApiClient.create(name: 'Test App', api_key: 'secret123')"
+docker-compose exec web bundle exec rails runner "ApiClient.create(name: 'Test App')"
+
+# 8. Probar el endpoint
+## Buscar por consola el ApiClient creado:
+docker-compose exec web bundle exec rails console
+ApiClient.last.api_key
+ejemplo de api_key: 17d963077a6f57d1e2248cfc22c533345f9251f679865fffff26be10800498b3
