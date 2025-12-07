@@ -18,8 +18,8 @@ module Invoicing
                          Date.current
                        end
         rescue Date::Error, TypeError
-          @audit_service.log('Invoice Creation Failed',
-                             { error: 'Invalid issue_date format', received: params[:issue_date] }, 'ERROR')
+          @audit_service.log(I18n.t('api.audit.invoice_creation_failed'),
+                             { error: I18n.t('api.invoices.invalid_date_format'), received: params[:issue_date] }, 'ERROR')
           return { status: :error, message: I18n.t('api.invoices.invalid_date_format') }
         end
 
@@ -30,14 +30,15 @@ module Invoicing
         )
 
         unless invoice.valid?
-          @audit_service.log('Invoice Creation Failed', { error: 'Invalid data', amount: invoice.amount }, 'ERROR')
+          @audit_service.log(I18n.t('api.audit.invoice_creation_failed'),
+                             { error: I18n.t('api.invoices.invalid_data'), amount: invoice.amount }, 'ERROR')
           return { status: :error, message: I18n.t('api.invoices.invalid_data') }
         end
 
         # Verify Client Existence (Cross-Boundary check)
         unless @client_service.exists?(invoice.client_id)
-          @audit_service.log('Invoice Creation Failed', { error: 'Client not found', client_id: invoice.client_id },
-                             'ERROR')
+          @audit_service.log(I18n.t('api.audit.invoice_creation_failed'),
+                             { error: I18n.t('api.invoices.client_not_found'), client_id: invoice.client_id }, 'ERROR')
           return { status: :error, message: I18n.t('api.invoices.client_not_found') }
         end
 
@@ -45,14 +46,14 @@ module Invoicing
         result = @repo.save(invoice)
 
         unless result
-          @audit_service.log('Invoice Creation Failed', { error: 'Database error', client_id: invoice.client_id },
-                             'ERROR')
+          @audit_service.log(I18n.t('api.audit.invoice_creation_failed'),
+                             { error: I18n.t('api.invoices.database_error'), client_id: invoice.client_id }, 'ERROR')
           return { status: :error, message: I18n.t('api.invoices.database_error') }
         end
 
         # Async Audit Log - Success
-        @audit_service.log('Invoice Created', { id: result.id, client_id: invoice.client_id, amount: invoice.amount },
-                           'SUCCESS')
+        @audit_service.log(I18n.t('api.audit.invoice_created'),
+                           { id: result.id, client_id: invoice.client_id, amount: invoice.amount }, 'SUCCESS')
         { status: :ok, message: I18n.t('api.invoices.created'), data: result }
       end
     end

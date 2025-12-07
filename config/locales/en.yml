@@ -15,6 +15,11 @@ en:
       client_not_found: "Client not found"
       not_found: "Invoice not found"
       database_error: "Database error"
+    audit:
+      invoice_created: "Invoice Created"
+      invoice_creation_failed: "Invoice Creation Failed"
+      invoice_updated: "Invoice Updated"
+      invoice_update_failed: "Invoice Update Failed"
     errors:
       unauthorized: "Unauthorized"
       unprocessable_entity: "Unprocessable entity"

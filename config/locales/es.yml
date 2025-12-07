@@ -15,6 +15,11 @@ es:
       client_not_found: "Cliente no encontrado"
       not_found: "Factura no encontrada"
       database_error: "Error de base de datos"
+    audit:
+      invoice_created: "Factura Creada"
+      invoice_creation_failed: "Falló Creación de Factura"
+      invoice_updated: "Factura Actualizada"
+      invoice_update_failed: "Falló Actualización de Factura"
     errors:
       unauthorized: "No autorizado"
       unprocessable_entity: "Entidad no procesable"
