@@ -53,7 +53,7 @@ module Api
 
       # GET /api/v1/invoices/:id
       def show
-        render json: { data: @invoice }
+        render json: { data: @invoice.as_json(include: :client) }
       end
 
       private
