@@ -78,7 +78,8 @@ module Api
         # We extract strictly what we need from params
         input_params = {
           amount: params[:amount],
-          client_id: params[:client_id]
+          client_id: params[:client_id],
+          issue_date: params[:issue_date]
         }
 
         result = use_case.execute(input_params)

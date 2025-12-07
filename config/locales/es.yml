@@ -9,6 +9,7 @@ es:
       updated: "Cliente actualizado exitosamente"
     invoices:
       created: "Factura creada exitosamente"
+      invalid_date_format: "Formato de fecha inválido. Use AAAA-MM-DD"
       invalid_data: "Datos inválidos: El monto debe ser positivo y el cliente válido"
       client_not_found: "Cliente no encontrado"
       not_found: "Factura no encontrada"
