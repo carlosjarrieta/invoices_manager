@@ -19,23 +19,11 @@ module Api
           AuditService.log(
             action: 'Client Created',
             entity: 'Client',
-            entity_id: @client.id,
-            details: @client.as_json,
-            performed_by: 'API',
-            ip_address: request.remote_ip
-          )
-          render json: @client, status: :created
+          AuditService.log('Client Created', { id: @client.id.to_s, name: @client.company_name, nit: @client.nit, email: @client.email }, 'SUCCESS')
+          render json: { message: I18n.t('api.clients.created'), data: @client }, status: :created
         else
-          AuditService.log(
-            action: 'Client Creation Failed',
-            entity: 'Client',
-            entity_id: nil,
-            details: { errors: @client.errors.full_messages, params: client_params.to_h },
-            performed_by: 'API',
-            ip_address: request.remote_ip,
-            status: 'ERROR'
-          )
-          render json: @client.errors, status: :unprocessable_entity
+          AuditService.log('Client Creation Failed', { error: @client.errors.full_messages, params: client_params }, 'ERROR')
+          render json: @client.errors, status: :unprocessable_content
         end
       end
 

@@ -73,7 +73,7 @@ module Api
           result[:data] = result[:data].as_json(include: :client)
           render json: result, status: :created
         else
-          render json: result, status: :unprocessable_entity
+          render json: result, status: :unprocessable_content
         end
       end
 
@@ -92,7 +92,7 @@ module Api
         elsif result[:status] == :not_found
           render json: { error: result[:message] }, status: :not_found
         else
-          render json: { error: result[:message] }, status: :unprocessable_entity
+          render json: { error: result[:message] }, status: :unprocessable_content
         end
       end
 

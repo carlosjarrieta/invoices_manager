@@ -31,7 +31,7 @@ module Invoicing
           unless @client_service.exists?(params[:client_id])
             @audit_service.log(I18n.t('api.audit.invoice_update_failed'),
                                { error: I18n.t('api.invoices.client_not_found'), client_id: params[:client_id], invoice_id: invoice.id }, 'ERROR')
-            return { status: :unprocessable_entity, message: I18n.t('api.invoices.client_not_found') }
+            return { status: :unprocessable_content, message: I18n.t('api.invoices.client_not_found') }
           end
           invoice.client_id = params[:client_id]
         end
@@ -48,7 +48,7 @@ module Invoicing
         else
           @audit_service.log(I18n.t('api.audit.invoice_update_failed'), { error: invoice.errors.full_messages, invoice_id: invoice_id },
                              'ERROR')
-          { status: :unprocessable_entity, message: invoice.errors.full_messages.join(', ') }
+          { status: :unprocessable_content, message: invoice.errors.full_messages.join(', ') }
         end
       end
     end
