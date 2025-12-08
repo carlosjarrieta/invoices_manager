@@ -20,6 +20,8 @@ es:
       invoice_creation_failed: "Falló Creación de Factura"
       invoice_updated: "Factura Actualizada"
       invoice_update_failed: "Falló Actualización de Factura"
+      client_created: "Cliente Creado"
+      client_creation_failed: "Falló Creación de Cliente"
     errors:
       unauthorized: "No autorizado"
       unprocessable_entity: "Entidad no procesable"

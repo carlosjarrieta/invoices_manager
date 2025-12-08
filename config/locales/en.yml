@@ -20,6 +20,8 @@ en:
       invoice_creation_failed: "Invoice Creation Failed"
       invoice_updated: "Invoice Updated"
       invoice_update_failed: "Invoice Update Failed"
+      client_created: "Client Created"
+      client_creation_failed: "Client Creation Failed"
     errors:
       unauthorized: "Unauthorized"
       unprocessable_entity: "Unprocessable entity"
