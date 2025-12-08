@@ -1,4 +1,3 @@
-# app/controllers/api/v1/clients_controller.rb
 module Api
   module V1
     class ClientsController < ApplicationController
