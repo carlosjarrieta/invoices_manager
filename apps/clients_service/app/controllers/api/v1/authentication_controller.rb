@@ -3,7 +3,7 @@
 module Api
   module V1
     class AuthenticationController < ApplicationController
-      skip_before_action :authenticate_request!, if: :authenticate_action?
+      # No incluir Authenticable porque este endpoint no requiere autenticación previa
 
       # POST /api/v1/authenticate
       # Acepta: {"api_client_id": 1} o {"api_key": "..."}
@@ -28,10 +28,6 @@ module Api
       end
 
       private
-
-      def authenticate_action?
-        action_name == 'create'
-      end
 
       def find_api_client
         if params[:api_client_id].present?
