@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "FactuMarket API - Microservicios",
-    "description": "Colección completa para probar los 3 microservicios: Clients, Invoices y Audit",
+    "description": "Colección completa para probar los 3 microservicios con autenticación JWT",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -24,9 +24,58 @@
       "key": "jwt_token",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "api_client_id",
+      "value": "1",
+      "type": "string"
     }
   ],
   "item": [
+    {
+      "name": "🔐 Autenticación",
+      "item": [
+        {
+          "name": "Obtener JWT Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"api_client_id\": {{api_client_id}}\n}"
+            },
+            "url": {
+              "raw": "{{clients_url}}/api/v1/authenticate",
+              "host": ["{{clients_url}}"],
+              "path": ["api", "v1", "authenticate"]
+            },
+            "description": "Obtiene un JWT token usando el ApiClient ID.\n\nNOTA: El API Client se crea automáticamente cuando ejecutas:\n./bin/start.sh\n\nAPI Key generada en los seeds:\n✅ API Client created: Default API Client\n   API Key: cf748e82fecc6eb55e362fa623c6a4addf72f26cb3179c3f6d665f2730091e5c\n\nPuedes obtener el token también desde la consola:\ndocker-compose exec clients_service bundle exec rails console\napi_client = ApiClient.first\ntoken = JsonWebToken.encode(api_client_id: api_client.id)\nputs token"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.token) {",
+                  "        pm.collectionVariables.set('jwt_token', jsonData.token);",
+                  "        console.log('✅ Token guardado:', jsonData.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "Clients Service",
       "item": [

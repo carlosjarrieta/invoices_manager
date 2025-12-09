@@ -8,7 +8,7 @@
       "_id": "wrk_1",
       "_type": "workspace",
       "name": "FactuMarket - Microservicios",
-      "description": "Workspace para probar los 3 microservicios",
+      "description": "Workspace para probar los 3 microservicios con autenticación JWT",
       "scope": "design"
     },
     {
@@ -20,16 +20,46 @@
         "clients_url": "http://localhost:3001",
         "invoices_url": "http://localhost:3002",
         "audit_url": "http://localhost:3003",
-        "jwt_token": ""
+        "jwt_token": "",
+        "api_client_id": "1"
       },
       "dataPropertyOrder": {
-        "&": ["clients_url", "invoices_url", "audit_url", "jwt_token"]
+        "&": ["clients_url", "invoices_url", "audit_url", "jwt_token", "api_client_id"]
       },
       "color": null,
       "isPrivate": false,
       "metaSortKey": 1,
       "created": 1702000000000,
       "modified": 1702000000000
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_1",
+      "name": "🔐 Autenticación",
+      "environment": {}
+    },
+    {
+      "_id": "req_auth_token",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Obtener JWT Token",
+      "url": "{{ _.clients_url }}/api/v1/authenticate",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"api_client_id\": {{ _.api_client_id }}\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1,
+      "description": "Obtiene un JWT token usando el ApiClient ID.\n\nNOTA: El API Client se crea automáticamente cuando ejecutas:\n./bin/start.sh\n\nAPI Key generada en los seeds:\n✅ API Client created: Default API Client\n   API Key: cf748e82fecc6eb55e362fa623c6a4addf72f26cb3179c3f6d665f2730091e5c\n\nPuedes obtener el token también desde la consola:\ndocker-compose exec clients_service bundle exec rails console\napi_client = ApiClient.first\ntoken = JsonWebToken.encode(api_client_id: api_client.id)\nputs token"
     },
     {
       "_id": "fld_clients",
