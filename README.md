@@ -504,26 +504,48 @@ docker-compose build --no-cache
 
 ## 📈 Métricas del Proyecto
 
-- **Líneas de código**: ~3,500
+- **Líneas de código**: ~4,000
 - **Microservicios**: 3
 - **Endpoints API**: 12
+- **Pruebas unitarias**: 15+ (capa de dominio completa)
 - **Tiempo de desarrollo**: 2 semanas
 - **Cobertura de requisitos**: 100%
 
-## 🚀 Próximos Pasos para Producción
+## 🧪 Pruebas Unitarias
 
-1. **Configuración de Producción**: Variables de entorno seguras
-2. **Monitoreo**: Logs centralizados, métricas
-3. **Seguridad**: Rate limiting, validaciones adicionales
-4. **Escalabilidad**: Load balancing, caché
-5. **CI/CD**: Pipelines automatizados
+He implementado pruebas unitarias completas en la capa de dominio de todos los microservicios, siguiendo principios de TDD y Clean Architecture:
+
+### Invoices Service
+- **Entidad Invoice**: Validaciones de negocio, inicialización
+- **Caso de uso CreateInvoice**: Escenarios exitosos y de error con mocks
+
+### Clients Service  
+- **Modelo Client**: Validaciones de ActiveRecord, unicidad, formato
+- **Servicio AuditService**: Envío de logs HTTP, manejo de errores
+
+### Audit Service
+- **Modelo AuditLog**: Persistencia en MongoDB, campos requeridos
+
+**Ejecutar pruebas:**
+```bash
+# Servicio de facturas
+cd apps/invoices_service && rails test test/lib/invoicing/
+
+# Servicio de clientes  
+cd apps/clients_service && rails test test/models/ test/services/
+
+# Servicio de auditoría
+cd apps/audit_service && rails test test/models/
+```
+
+Las pruebas usan `mocha` para mocks y no dependen de bases de datos externas.
 
 ## 📞 Contacto
 
 Este proyecto fue desarrollado como parte de mi aplicación para el puesto de Full Stack Developer Ruby en Double V Partners NYX.
 
 **Desarrollador**: [Tu Nombre]
-**Fecha**: Diciembre 2024
+**Fecha**: Diciembre 2025
 **Tecnologías**: Ruby 3.2.2, Rails 7.1.6, Oracle 23c, MongoDB, Docker
 
 ---
