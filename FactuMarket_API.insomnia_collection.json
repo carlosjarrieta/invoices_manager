@@ -1,187 +1,275 @@
 {
   "_type": "export",
-  "__export_format": 4,
+  "__exportFormat": 4,
+  "__exportDate": "2024-12-09T00:00:00.000Z",
+  "__version": 4,
   "resources": [
     {
-      "_type": "request_group",
-      "name": "FactuMarket API",
-      "description": "Microservices API for Invoice Management",
-      "environment": {
-        "base_url": "http://localhost:3000",
-        "api_key": "YOUR_API_KEY_HERE",
+      "_id": "wrk_1",
+      "_type": "workspace",
+      "name": "FactuMarket - Microservicios",
+      "description": "Workspace para probar los 3 microservicios",
+      "scope": "design"
+    },
+    {
+      "_id": "env_1",
+      "_type": "environment",
+      "parentId": "wrk_1",
+      "name": "Development",
+      "data": {
+        "clients_url": "http://localhost:3001",
+        "invoices_url": "http://localhost:3002",
+        "audit_url": "http://localhost:3003",
         "jwt_token": ""
       },
-      "children": [
+      "dataPropertyOrder": {
+        "&": ["clients_url", "invoices_url", "audit_url", "jwt_token"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1,
+      "created": 1702000000000,
+      "modified": 1702000000000
+    },
+    {
+      "_id": "fld_clients",
+      "_type": "request_group",
+      "parentId": "wrk_1",
+      "name": "Clients Service",
+      "environment": {}
+    },
+    {
+      "_id": "req_clients_list",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Listar Clientes",
+      "url": "{{ _.clients_url }}/api/v1/clients",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
         {
-          "_type": "request",
-          "name": "Login - Get JWT Token",
-          "method": "POST",
-          "url": "{{ _.base_url }}/api/v1/auth/login",
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ],
-          "body": {
-            "mimeType": "application/json",
-            "text": "{\n  \"api_key\": \"{{ _.api_key }}\"\n}"
-          },
-          "description": "Authenticate with API Key to receive JWT token"
-        },
-        {
-          "_type": "request",
-          "name": "List All Clients",
-          "method": "GET",
-          "url": "{{ _.base_url }}/api/v1/clients",
-          "headers": [
-            {
-              "name": "Authorization",
-              "value": "Bearer {{ _.jwt_token }}"
-            }
-          ],
-          "description": "Get list of all clients"
-        },
-        {
-          "_type": "request",
-          "name": "Create Client",
-          "method": "POST",
-          "url": "{{ _.base_url }}/api/v1/clients",
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "Authorization",
-              "value": "Bearer {{ _.jwt_token }}"
-            }
-          ],
-          "body": {
-            "mimeType": "application/json",
-            "text": "{\n  \"client\": {\n    \"company_name\": \"Panadería Don Pedro\",\n    \"nit\": \"900123456-7\",\n    \"email\": \"contacto@panaderiadonpedro.com\",\n    \"address\": \"Calle 123 #45-67, Bogotá\"\n  }\n}"
-          },
-          "description": "Create a new client in the system"
-        },
-        {
-          "_type": "request",
-          "name": "Get Client by ID (with Invoices)",
-          "method": "GET",
-          "url": "{{ _.base_url }}/api/v1/clients/1?page=1&per_page=10",
-          "headers": [
-            {
-              "name": "Authorization",
-              "value": "Bearer {{ _.jwt_token }}"
-            }
-          ],
-          "description": "Retrieve a specific client by ID with their invoices paginated"
-        },
-        {
-          "_type": "request",
-          "name": "Search Client by NIT",
-          "method": "GET",
-          "url": "{{ _.base_url }}/api/v1/clients/search_by_nit?nit=900123456-7",
-          "headers": [
-            {
-              "name": "Authorization",
-              "value": "Bearer {{ _.jwt_token }}"
-            }
-          ],
-          "description": "Search for a client by NIT (Tax ID)"
-        },
-        {
-          "_type": "request",
-          "name": "List Invoices (Filter & Pagination)",
-          "method": "GET",
-          "url": "{{ _.base_url }}/api/v1/invoices?page=1&per_page=10",
-          "headers": [
-            {
-              "name": "Authorization",
-              "value": "Bearer {{ _.jwt_token }}"
-            }
-          ],
-          "description": "Get paginated list of invoices. Defaults to current day if dates are not provided."
-        },
-        {
-          "_type": "request",
-          "name": "Create Invoice",
-          "method": "POST",
-          "url": "{{ _.base_url }}/api/v1/invoices",
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "Authorization",
-              "value": "Bearer {{ _.jwt_token }}"
-            }
-          ],
-          "body": {
-            "mimeType": "application/json",
-            "text": "{\n  \"client_id\": 1,\n  \"amount\": 150000.50\n}"
-          },
-          "description": "Create a new invoice. Validates client existence and amount > 0"
-        },
-        {
-          "_type": "request",
-          "name": "Get Invoice by ID",
-          "method": "GET",
-          "url": "{{ _.base_url }}/api/v1/invoices/1",
-          "headers": [
-            {
-              "name": "Authorization",
-              "value": "Bearer {{ _.jwt_token }}"
-            }
-          ],
-          "description": "Get specific invoice details including client info"
-        },
-        {
-          "_type": "request_group",
-          "name": "Audit Logs",
-          "children": [
-            {
-              "_type": "request",
-              "name": "List Audit Logs (Paginated)",
-              "method": "GET",
-              "url": "{{ _.base_url }}/api/v1/audit_logs?page=1&per_page=10",
-              "headers": [
-                {
-                  "name": "Authorization",
-                  "value": "Bearer {{ _.jwt_token }}"
-                }
-              ],
-              "description": "Get all audit logs with pagination"
-            },
-            {
-              "_type": "request",
-              "name": "Get Audit Log by ID",
-              "method": "GET",
-              "url": "{{ _.base_url }}/api/v1/audit_logs/ID_HERE",
-              "headers": [
-                {
-                  "name": "Authorization",
-                  "value": "Bearer {{ _.jwt_token }}"
-                }
-              ],
-              "description": "Retrieve specific audit log"
-            },
-            {
-              "_type": "request",
-              "name": "Filter Audit Logs by Entity",
-              "method": "GET",
-              "url": "{{ _.base_url }}/api/v1/audit_logs/by_entity?entity=Client&page=1",
-              "headers": [
-                {
-                  "name": "Authorization",
-                  "value": "Bearer {{ _.jwt_token }}"
-                }
-              ],
-              "description": "Filter logs by Entity type"
-            }
-          ]
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
         }
-      ]
+      ],
+      "authentication": {},
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_clients_create",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Crear Cliente",
+      "url": "{{ _.clients_url }}/api/v1/clients",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"company_name\": \"Nueva Empresa S.A.S\",\n  \"nit\": \"900999888-7\",\n  \"email\": \"contacto@nuevaempresa.com\",\n  \"address\": \"Calle 100 #50-30, Bogotá\",\n  \"phone\": \"3005551234\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_clients_get",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Obtener Cliente por ID",
+      "url": "{{ _.clients_url }}/api/v1/clients/1",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_clients_search",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Buscar Cliente por NIT",
+      "url": "{{ _.clients_url }}/api/v1/clients/search_by_nit?nit=900123456-7",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 4
+    },
+    {
+      "_id": "fld_invoices",
+      "_type": "request_group",
+      "parentId": "wrk_1",
+      "name": "Invoices Service",
+      "environment": {}
+    },
+    {
+      "_id": "req_invoices_list",
+      "_type": "request",
+      "parentId": "fld_invoices",
+      "name": "Listar Facturas",
+      "url": "{{ _.invoices_url }}/api/v1/invoices",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_invoices_create",
+      "_type": "request",
+      "parentId": "fld_invoices",
+      "name": "Crear Factura",
+      "url": "{{ _.invoices_url }}/api/v1/invoices",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"client_id\": 1,\n  \"amount\": 2500000,\n  \"issue_date\": \"2024-12-09\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_invoices_get",
+      "_type": "request",
+      "parentId": "fld_invoices",
+      "name": "Obtener Factura por ID",
+      "url": "{{ _.invoices_url }}/api/v1/invoices/1",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_invoices_update",
+      "_type": "request",
+      "parentId": "fld_invoices",
+      "name": "Actualizar Factura",
+      "url": "{{ _.invoices_url }}/api/v1/invoices/1",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"amount\": 3000000,\n  \"issue_date\": \"2024-12-09\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 4
+    },
+    {
+      "_id": "fld_audit",
+      "_type": "request_group",
+      "parentId": "wrk_1",
+      "name": "Audit Service",
+      "environment": {}
+    },
+    {
+      "_id": "req_audit_list",
+      "_type": "request",
+      "parentId": "fld_audit",
+      "name": "Listar Logs de Auditoría",
+      "url": "{{ _.audit_url }}/api/v1/audit_logs?page=1&per_page=20",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_audit_entity",
+      "_type": "request",
+      "parentId": "fld_audit",
+      "name": "Logs por Entidad",
+      "url": "{{ _.audit_url }}/api/v1/audit_logs/by_entity?entity=Client&entity_id=1",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_audit_get",
+      "_type": "request",
+      "parentId": "fld_audit",
+      "name": "Obtener Log por ID",
+      "url": "{{ _.audit_url }}/api/v1/audit_logs/1",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.jwt_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 3
     }
   ]
 }
