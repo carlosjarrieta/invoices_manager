@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   # API v1 Routes
   namespace :api do
     namespace :v1 do
+      # Authentication endpoint
+      post :authenticate, to: 'authentication#create'
+      
       resources :audit_logs, only: [:index, :create, :show] do
         collection do
           get :by_entity
