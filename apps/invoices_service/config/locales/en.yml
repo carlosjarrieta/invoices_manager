@@ -28,4 +28,17 @@
 #       enabled: "ON"
 
 en:
+  api:
+    invoices:
+      created: "Invoice created successfully"
+      not_found: "Invoice not found"
+      invalid_data: "Invalid invoice data"
+      invalid_date_format: "Invalid date format"
+      client_not_found: "Client not found"
+      database_error: "Database error"
+    audit:
+      invoice_created: "Invoice created"
+      invoice_creation_failed: "Invoice creation failed"
+      invoice_updated: "Invoice updated"
+      invoice_update_failed: "Invoice update failed"
   hello: "Hello world"

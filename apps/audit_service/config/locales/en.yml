@@ -28,4 +28,7 @@
 #       enabled: "ON"
 
 en:
+  api:
+    errors:
+      unauthorized: "Unauthorized"
   hello: "Hello world"
