@@ -204,7 +204,32 @@
       "url": "http://localhost:3002/api/v1/invoices",
       "method": "GET",
       "body": {},
-      "parameters": [],
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1"
+        },
+        {
+          "name": "per_page",
+          "value": "10"
+        },
+        {
+          "name": "start_date",
+          "value": "2024-12-01"
+        },
+        {
+          "name": "end_date",
+          "value": "2024-12-31"
+        },
+        {
+          "name": "issue_date_start",
+          "value": "2024-12-01"
+        },
+        {
+          "name": "issue_date_end",
+          "value": "2024-12-31"
+        }
+      ],
       "headers": [
         {
           "name": "Authorization",

@@ -26,6 +26,17 @@ module Api
 
         query = query.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
 
+        # Filter by issue_date if provided
+        if params[:issue_date_start].present? && params[:issue_date_end].present?
+          begin
+            issue_start = Date.parse(params[:issue_date_start])
+            issue_end = Date.parse(params[:issue_date_end])
+            query = query.where(issue_date: issue_start..issue_end)
+          rescue ArgumentError
+            # Invalid date format, ignore filter
+          end
+        end
+
         invoices = query.offset((page.to_i - 1) * per_page).limit(per_page)
 
         total_count = query.count
