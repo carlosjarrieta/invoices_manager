@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_08_000002) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_09_000001) do
   create_table "api_clients", force: :cascade do |t|
     t.string "name", null: false
     t.string "api_key", null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_08_000002) do
     t.index ["jobno"], name: "aq$_schedules_check", unique: true
   end
 
-  create_table "clients", force: :cascade do |t|
+  create_table "customers", force: :cascade do |t|
     t.string "company_name", null: false
     t.string "nit", null: false
     t.string "email", null: false
@@ -39,14 +39,27 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_08_000002) do
     t.string "phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_clients_on_email", unique: true
-    t.index ["nit"], name: "index_clients_on_nit", unique: true
+    t.index ["email"], name: "index_customers_on_email", unique: true
+    t.index ["nit"], name: "index_customers_on_nit", unique: true
   end
 
   create_table "help", primary_key: ["topic", "seq"], force: :cascade do |t|
     t.string "topic", limit: 50, null: false
     t.decimal "seq", null: false
     t.string "info", limit: 80
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.integer "client_id", precision: 38, null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.date "issue_date", null: false
+    t.string "status", default: "pending"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_invoices_on_client_id"
+    t.index ["issue_date"], name: "index_invoices_on_issue_date"
+    t.index ["status"], name: "index_invoices_on_status"
   end
 
   create_table "mview$_adv_ajg", primary_key: "ajgid#", id: :decimal, comment: "Anchor-join graph representation", force: :cascade do |t|

@@ -36,7 +36,11 @@ module Invoicing
         end
 
         # Verify Client Existence (Cross-Boundary check)
-        unless @client_service.exists?(invoice.client_id)
+        puts "DEBUG: Checking if client #{invoice.client_id} exists..."
+        client_exists = @client_service.exists?(invoice.client_id)
+        puts "DEBUG: Client exists? #{client_exists}"
+        
+        unless client_exists
           @audit_service.log(I18n.t('api.audit.invoice_creation_failed'),
                              { error: I18n.t('api.invoices.client_not_found'), client_id: invoice.client_id }, 'ERROR')
           return { status: :error, message: I18n.t('api.invoices.client_not_found') }

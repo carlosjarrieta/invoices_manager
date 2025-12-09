@@ -48,4 +48,11 @@ Rails.application.configure do
 
   config.active_job.verbose_enqueue_logs = true
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Allow requests from other microservices
+  config.hosts << "audit_service"
+  config.hosts << "localhost"
+  config.hosts << "127.0.0.1"
+  # Allow any host for inter-service communication in development
+  config.host_authorization = { exclude: ->(request) { request.local? } }
 end

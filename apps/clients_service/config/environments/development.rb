@@ -50,6 +50,13 @@ Rails.application.configure do
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
 
+  # Allow requests from other microservices
+  config.hosts << "clients_service"
+  config.hosts << "localhost"
+  config.hosts << "127.0.0.1"
+  # Allow any host for inter-service communication in development
+  config.host_authorization = { exclude: ->(request) { request.local? } }
+
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 

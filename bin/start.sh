@@ -51,17 +51,19 @@ fi
 echo ""
 echo -e "${YELLOW}🗄️  Configurando bases de datos (esto puede tomar 1-2 minutos)...${NC}"
 
-# Clients Service con ORACLE_SYSTEM_PASSWORD
+# Clients Service
 echo -e "${YELLOW}  📋 Clients Service${NC}"
-docker-compose exec -T clients_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:create' 2>&1 | grep -E "(created|already exists|error)" || true
-docker-compose exec -T clients_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:migrate' 2>&1 | tail -5
-docker-compose exec -T clients_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:seed' 2>&1 | grep -E "(✅|API Client|Creating|Seed)" || echo "  ✅ Seeds cargados"
+echo "    - Ejecutando migraciones..."
+docker-compose exec -T clients_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:migrate'
+echo "    - Cargando seeds..."
+docker-compose exec -T clients_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:seed'
 
-# Invoices Service con ORACLE_SYSTEM_PASSWORD
+# Invoices Service
 echo -e "${YELLOW}  📄 Invoices Service${NC}"
-docker-compose exec -T invoices_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:create' 2>&1 | grep -E "(created|already exists|error)" || true
-docker-compose exec -T invoices_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:migrate' 2>&1 | tail -5
-docker-compose exec -T invoices_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:seed' 2>&1 | grep -E "(✅|API Client|Creating|Seed)" || echo "  ✅ Seeds cargados"
+echo "    - Ejecutando migraciones..."
+docker-compose exec -T invoices_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:migrate'
+echo "    - Cargando seeds..."
+docker-compose exec -T invoices_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:seed'
 
 echo ""
 echo -e "${GREEN}✨ Sistema iniciado!${NC}"

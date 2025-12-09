@@ -18,8 +18,10 @@ services:
       - ORACLE_DATABASE=FREEPDB1
       - ORACLE_USERNAME=system
       - ORACLE_PASSWORD=password123
+      - ORACLE_SYSTEM_PASSWORD=password123
       - AUDIT_SERVICE_URL=http://audit_service:3000
       - NLS_LANG=AMERICAN_AMERICA.AL32UTF8
+      - JWT_SECRET_KEY=shared_secret_key_for_microservices_jwt_validation
     depends_on:
       - oracle-db
       - audit_service
@@ -45,6 +47,7 @@ services:
       - CLIENTS_SERVICE_URL=http://clients_service:3000
       - AUDIT_SERVICE_URL=http://audit_service:3000
       - NLS_LANG=AMERICAN_AMERICA.AL32UTF8
+      - JWT_SECRET_KEY=shared_secret_key_for_microservices_jwt_validation
     depends_on:
       - oracle-db
       - clients_service
@@ -65,6 +68,7 @@ services:
       - MONGO_HOST=mongo-db
       - MONGO_PORT=27017
       - MONGO_DATABASE=audit_logs
+      - JWT_SECRET_KEY=shared_secret_key_for_microservices_jwt_validation
     depends_on:
       - mongo-db
 
