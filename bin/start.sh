@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script de inicio rápido para el Sistema de Facturación Electrónica
+# Script de inicio para el Sistema de Facturación Electrónica
 # Uso: ./bin/start.sh
 
 set -e
@@ -9,30 +9,29 @@ echo "🚀 Iniciando Sistema de Facturación Electrónica..."
 echo "=================================================="
 echo ""
 
-# Colores para output
+# Colores
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# Verificar que Docker esté corriendo
+# Verificar Docker
 if ! docker info > /dev/null 2>&1; then
     echo -e "${RED}❌ Error: Docker no está corriendo${NC}"
-    echo "Por favor inicia Docker Desktop y vuelve a intentar."
     exit 1
 fi
 
 echo -e "${GREEN}✅ Docker está corriendo${NC}"
 echo ""
 
-# Levantar servicios (sin construir si las imágenes ya existen)
+# Levantar servicios
 echo -e "${YELLOW}🚢 Levantando servicios...${NC}"
 docker-compose up -d
 
 echo ""
-echo -e "${YELLOW}⏳ Esperando que los servicios estén listos...${NC}"
+echo -e "${YELLOW}⏳ Esperando que Oracle esté listo...${NC}"
 
-# Esperar a que Oracle esté healthy (máximo 3 minutos)
+# Esperar a Oracle
 MAX_WAIT=180
 WAITED=0
 while [ $WAITED -lt $MAX_WAIT ]; do
@@ -46,23 +45,23 @@ while [ $WAITED -lt $MAX_WAIT ]; do
 done
 
 if [ $WAITED -ge $MAX_WAIT ]; then
-    echo -e "${RED}⚠️  Oracle tardó demasiado. Continuando de todos modos...${NC}"
+    echo -e "${RED}⚠️  Oracle tardó demasiado${NC}"
 fi
 
 echo ""
-echo -e "${YELLOW}🗄️  Configurando bases de datos...${NC}"
+echo -e "${YELLOW}🗄️  Configurando bases de datos (esto puede tomar 1-2 minutos)...${NC}"
 
-# Clients Service
+# Clients Service con ORACLE_SYSTEM_PASSWORD
 echo -e "${YELLOW}  📋 Clients Service${NC}"
-docker-compose exec -T clients_service bundle exec rails db:create 2>/dev/null || true
-docker-compose exec -T clients_service bundle exec rails db:migrate 2>/dev/null || true
-docker-compose exec -T clients_service bundle exec rails db:seed 2>/dev/null || true
+docker-compose exec -T clients_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:create' 2>&1 | grep -v "^$" || true
+docker-compose exec -T clients_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:migrate' 2>&1 | grep -v "^$" || true
+docker-compose exec -T clients_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:seed' 2>&1 | grep -v "^$" || true
 
-# Invoices Service
+# Invoices Service con ORACLE_SYSTEM_PASSWORD
 echo -e "${YELLOW}  📄 Invoices Service${NC}"
-docker-compose exec -T invoices_service bundle exec rails db:create 2>/dev/null || true
-docker-compose exec -T invoices_service bundle exec rails db:migrate 2>/dev/null || true
-docker-compose exec -T invoices_service bundle exec rails db:seed 2>/dev/null || true
+docker-compose exec -T invoices_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:create' 2>&1 | grep -v "^$" || true
+docker-compose exec -T invoices_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:migrate' 2>&1 | grep -v "^$" || true
+docker-compose exec -T invoices_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:seed' 2>&1 | grep -v "^$" || true
 
 echo ""
 echo -e "${GREEN}✨ Sistema iniciado!${NC}"
