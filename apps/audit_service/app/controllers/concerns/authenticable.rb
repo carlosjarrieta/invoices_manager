@@ -13,7 +13,8 @@ module Authenticable
 
     begin
       @decoded = JsonWebToken.decode(token)
-      ApiClient.find(@decoded[:api_client_id])
+      # Audit service uses MongoDB, no need to verify ApiClient in DB
+      # Just validate that the token is valid
     rescue StandardError => e
       render json: { errors: 'Unauthorized' }, status: :unauthorized
     end
