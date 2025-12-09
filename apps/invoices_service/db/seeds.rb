@@ -7,12 +7,11 @@ api_client = ApiClient.find_or_create_by!(name: 'Default API Client') do |client
 end
 
 puts "✅ API Client created: #{api_client.name}"
-puts "   API Key: #{api_client.api_key}"
+puts "   ID:       #{api_client.id}"
+puts "   API Key:  #{api_client.api_key}"
 puts ""
-puts "🔐 Para usar la API, genera un token JWT:"
-puts "   rails console"
-puts "   api_client = ApiClient.first"
-puts "   token = JsonWebToken.encode(api_client_id: api_client.id)"
-puts "   puts token"
+puts "🔑 Para autenticarte usa CUALQUIERA de estos:"
+puts "   1. {\"api_client_id\": #{api_client.id}}"
+puts "   2. {\"api_key\": \"#{api_client.api_key}\"}"
 puts ""
 puts "📝 Seed data loaded successfully!"
