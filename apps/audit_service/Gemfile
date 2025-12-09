@@ -43,3 +43,4 @@ group :development do
 end
 
 gem 'mongoid', '~> 8.0'
+gem 'jwt', '~> 2.7'

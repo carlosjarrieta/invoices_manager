@@ -44,3 +44,4 @@ end
 
 gem 'activerecord-oracle_enhanced-adapter', '~> 7.0'
 gem 'ruby-oci8', '~> 2.2'
+gem 'jwt', '~> 2.7'
