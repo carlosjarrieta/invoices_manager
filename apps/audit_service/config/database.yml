@@ -1,0 +1,3 @@
+# Este servicio usa MongoDB vía Mongoid
+# Ver config/mongoid.yml para la configuración de la base de datos
+

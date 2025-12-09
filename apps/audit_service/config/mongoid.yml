@@ -1,0 +1,29 @@
+development:
+  clients:
+    default:
+      database: <%= ENV.fetch("MONGO_DATABASE", "audit_logs") %>
+      hosts:
+        - <%= ENV.fetch("MONGO_HOST", "localhost") %>:<%= ENV.fetch("MONGO_PORT", "27017") %>
+      options:
+        server_selection_timeout: 5
+
+test:
+  clients:
+    default:
+      database: audit_logs_test
+      hosts:
+        - <%= ENV.fetch("MONGO_HOST", "localhost") %>:<%= ENV.fetch("MONGO_PORT", "27017") %>
+      options:
+        read:
+          mode: :primary
+        max_pool_size: 1
+
+production:
+  clients:
+    default:
+      database: <%= ENV.fetch("MONGO_DATABASE", "audit_logs") %>
+      hosts:
+        - <%= ENV.fetch("MONGO_HOST", "localhost") %>:<%= ENV.fetch("MONGO_PORT", "27017") %>
+      options:
+        server_selection_timeout: 5
+        max_pool_size: 10

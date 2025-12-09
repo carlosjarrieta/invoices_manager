@@ -1,33 +1,72 @@
 version: '3.8'
 
 services:
-  # Servicio de la aplicación Rails
-  web:
-    build:
-      context: .
+  # Microservicio de Clientes (Gestión de Clientes)
+  clients_service:
+    build: 
+      context: ./apps/clients_service
       dockerfile: Dockerfile
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
+    command: sh -c "rm -f tmp/pids/server.pid && bundle install && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
-      - .:/rails
-      - bundle_cache:/usr/local/bundle
+      - ./apps/clients_service:/rails
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       - RAILS_ENV=development
       - ORACLE_HOST=oracle-db
       - ORACLE_PORT=1521
+      - ORACLE_DATABASE=XEPDB1
+      - ORACLE_USERNAME=system
       - ORACLE_PASSWORD=password123
-      - NLS_LANG=AMERICAN_AMERICA.AL32UTF8
-      - MONGO_HOST=mongo-db
-      - MONGO_PORT=27017
-      - MONGO_DATABASE=invoices_logs
+      - AUDIT_SERVICE_URL=http://audit_service:3000
     depends_on:
       - oracle-db
-      - mongo-db
-    stdin_open: true
-    tty: true
+      - audit_service
 
-  # Base de datos Oracle
+  # Microservicio de Facturas (Core de Facturación)
+  invoices_service:
+    build: 
+      context: ./apps/invoices_service
+      dockerfile: Dockerfile
+    command: sh -c "rm -f tmp/pids/server.pid && bundle install && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - ./apps/invoices_service:/rails
+    ports:
+      - "3002:3000"
+    environment:
+      - RAILS_ENV=development
+      - ORACLE_HOST=oracle-db
+      - ORACLE_PORT=1521
+      - ORACLE_DATABASE=XEPDB1
+      - ORACLE_USERNAME=system
+      - ORACLE_PASSWORD=password123
+      # Comunicación entre servicios
+      - CLIENTS_SERVICE_URL=http://clients_service:3000
+      - AUDIT_SERVICE_URL=http://audit_service:3000
+    depends_on:
+      - oracle-db
+      - clients_service
+      - audit_service
+
+  # Microservicio de Auditoría (Logs en Mongo)
+  audit_service:
+    build: 
+      context: ./apps/audit_service
+      dockerfile: Dockerfile
+    command: sh -c "rm -f tmp/pids/server.pid && bundle install && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - ./apps/audit_service:/rails
+    ports:
+      - "3003:3000"
+    environment:
+      - RAILS_ENV=development
+      - MONGO_HOST=mongo-db
+      - MONGO_PORT=27017
+      - MONGO_DATABASE=audit_logs
+    depends_on:
+      - mongo-db
+
+  # Base de datos Oracle (Compartida para la Demo, pero con esquemas lógicos separados idealmente)
   oracle-db:
     image: gvenzl/oracle-free:23-slim
     environment:
@@ -44,11 +83,11 @@ services:
       timeout: 10s
       retries: 5
 
-  # Base de datos MongoDB
+  # Base de datos MongoDB (Auditoría)
   mongo-db:
     image: mongo:latest
     environment:
-      MONGO_INITDB_DATABASE: invoices_logs
+      MONGO_INITDB_DATABASE: audit_logs
     ports:
       - "27017:27017"
     volumes:
@@ -62,4 +101,3 @@ services:
 volumes:
   oracle_data:
   mongo_data:
-  bundle_cache:
