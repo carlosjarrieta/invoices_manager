@@ -602,15 +602,6 @@ docker-compose build --no-cache
 - **Oracle**: Para datos transaccionales que requieren ACID
 - **MongoDB**: Para logs de auditoría (documentos flexibles)
 
-## 📈 Métricas del Proyecto
-
-- **Líneas de código**: ~4,000
-- **Microservicios**: 3
-- **Endpoints API**: 12
-- **Pruebas unitarias**: 15+ (capa de dominio completa)
-- **Tiempo de desarrollo**: 2 semanas
-- **Cobertura de requisitos**: 100%
-
 ## 🧪 Pruebas Unitarias
 
 He implementado pruebas unitarias completas en la capa de dominio de todos los microservicios, siguiendo principios de TDD y Clean Architecture:
