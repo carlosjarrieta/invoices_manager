@@ -1,33 +1,23 @@
 {
   "info": {
     "name": "FactuMarket API - Microservicios",
-    "description": "Colección completa para probar los 3 microservicios con autenticación JWT",
+    "description": "Colección completa para probar los 3 microservicios con autenticación JWT independiente",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
-      "key": "clients_url",
-      "value": "http://localhost:3001",
-      "type": "string"
-    },
-    {
-      "key": "invoices_url",
-      "value": "http://localhost:3002",
-      "type": "string"
-    },
-    {
-      "key": "audit_url",
-      "value": "http://localhost:3003",
-      "type": "string"
-    },
-    {
-      "key": "jwt_token",
+      "key": "token_clients",
       "value": "",
       "type": "string"
     },
     {
-      "key": "api_client_id",
-      "value": "1",
+      "key": "token_invoices",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "token_audit",
+      "value": "",
       "type": "string"
     }
   ],
@@ -36,7 +26,7 @@
       "name": "🔐 Autenticación",
       "item": [
         {
-          "name": "Obtener JWT Token",
+          "name": "Auth - Clients Service",
           "request": {
             "method": "POST",
             "header": [
@@ -47,25 +37,109 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"api_client_id\": {{api_client_id}}\n}\n\nO si prefieres usar la API Key:\n{\n  \"api_key\": \"cf748e82fecc6eb55e362fa623c6a4addf72f26cb3179c3f6d665f2730091e5c\"\n}"
+              "raw": "{\n  \"api_client_id\": 1\n}"
             },
             "url": {
-              "raw": "{{clients_url}}/api/v1/authenticate",
-              "host": ["{{clients_url}}"],
+              "raw": "http://localhost:3001/api/v1/authenticate",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
               "path": ["api", "v1", "authenticate"]
             },
-            "description": "Obtiene un JWT token usando:\n- api_client_id: 1 (ID del cliente)\n- O api_key: <key> (API Key mostrada en los seeds)\n\nCuando ejecutas ./bin/start.sh ves:\n✅ API Client created: Default API Client\n   API Key: cf748e82fecc6eb55e362fa623c6a4addf72f26cb3179c3f6d665f2730091e5c\n\nPuedes usar CUALQUIERA de estos dos formatos:\n\n1. Con api_client_id:\n   {\"api_client_id\": 1}\n\n2. Con api_key:\n   {\"api_key\": \"cf748e82fecc6eb55e362fa623c6a4addf72f26cb3179c3f6d665f2730091e5c\"}\n\nAmbos generarán el mismo JWT token"
+            "description": "Obtiene JWT token para Clients Service (Puerto 3001)"
           },
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "if (pm.response.code === 200) {",
                   "    var jsonData = pm.response.json();",
                   "    if (jsonData.token) {",
-                  "        pm.collectionVariables.set('jwt_token', jsonData.token);",
-                  "        console.log('✅ Token guardado:', jsonData.token);",
+                  "        pm.collectionVariables.set('token_clients', jsonData.token);",
+                  "        console.log('✅ Token Clients guardado');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth - Invoices Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"api_client_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3002/api/v1/authenticate",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3002",
+              "path": ["api", "v1", "authenticate"]
+            },
+            "description": "Obtiene JWT token para Invoices Service (Puerto 3002)"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.token) {",
+                  "        pm.collectionVariables.set('token_invoices', jsonData.token);",
+                  "        console.log('✅ Token Invoices guardado');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth - Audit Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"api_client_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3003/api/v1/authenticate",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3003",
+              "path": ["api", "v1", "authenticate"]
+            },
+            "description": "Obtiene JWT token para Audit Service (Puerto 3003)"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.token) {",
+                  "        pm.collectionVariables.set('token_audit', jsonData.token);",
+                  "        console.log('✅ Token Audit guardado');",
                   "    }",
                   "}"
                 ],
@@ -86,13 +160,15 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "Bearer {{token_clients}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{clients_url}}/api/v1/clients",
-              "host": ["{{clients_url}}"],
+              "raw": "http://localhost:3001/api/v1/clients",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
               "path": ["api", "v1", "clients"]
             }
           }
@@ -108,7 +184,7 @@
               },
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "Bearer {{token_clients}}",
                 "type": "text"
               }
             ],
@@ -117,8 +193,10 @@
               "raw": "{\n  \"company_name\": \"Nueva Empresa S.A.S\",\n  \"nit\": \"900999888-7\",\n  \"email\": \"contacto@nuevaempresa.com\",\n  \"address\": \"Calle 100 #50-30, Bogotá\",\n  \"phone\": \"3005551234\"\n}"
             },
             "url": {
-              "raw": "{{clients_url}}/api/v1/clients",
-              "host": ["{{clients_url}}"],
+              "raw": "http://localhost:3001/api/v1/clients",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
               "path": ["api", "v1", "clients"]
             }
           }
@@ -130,13 +208,15 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "Bearer {{token_clients}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{clients_url}}/api/v1/clients/1",
-              "host": ["{{clients_url}}"],
+              "raw": "http://localhost:3001/api/v1/clients/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
               "path": ["api", "v1", "clients", "1"]
             }
           }
@@ -148,13 +228,15 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "Bearer {{token_clients}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{clients_url}}/api/v1/clients/search_by_nit?nit=900123456-7",
-              "host": ["{{clients_url}}"],
+              "raw": "http://localhost:3001/api/v1/clients/search_by_nit?nit=900123456-7",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
               "path": ["api", "v1", "clients", "search_by_nit"],
               "query": [
                 {
@@ -177,13 +259,15 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "Bearer {{token_invoices}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{invoices_url}}/api/v1/invoices",
-              "host": ["{{invoices_url}}"],
+              "raw": "http://localhost:3002/api/v1/invoices",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3002",
               "path": ["api", "v1", "invoices"]
             }
           }
@@ -199,7 +283,7 @@
               },
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "Bearer {{token_invoices}}",
                 "type": "text"
               }
             ],
@@ -208,8 +292,10 @@
               "raw": "{\n  \"client_id\": 1,\n  \"amount\": 2500000,\n  \"issue_date\": \"2024-12-09\"\n}"
             },
             "url": {
-              "raw": "{{invoices_url}}/api/v1/invoices",
-              "host": ["{{invoices_url}}"],
+              "raw": "http://localhost:3002/api/v1/invoices",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3002",
               "path": ["api", "v1", "invoices"]
             }
           }
@@ -221,13 +307,15 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "Bearer {{token_invoices}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{invoices_url}}/api/v1/invoices/1",
-              "host": ["{{invoices_url}}"],
+              "raw": "http://localhost:3002/api/v1/invoices/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3002",
               "path": ["api", "v1", "invoices", "1"]
             }
           }
@@ -243,7 +331,7 @@
               },
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "Bearer {{token_invoices}}",
                 "type": "text"
               }
             ],
@@ -252,8 +340,10 @@
               "raw": "{\n  \"amount\": 3000000,\n  \"issue_date\": \"2024-12-09\"\n}"
             },
             "url": {
-              "raw": "{{invoices_url}}/api/v1/invoices/1",
-              "host": ["{{invoices_url}}"],
+              "raw": "http://localhost:3002/api/v1/invoices/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3002",
               "path": ["api", "v1", "invoices", "1"]
             }
           }
@@ -270,13 +360,15 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "Bearer {{token_audit}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{audit_url}}/api/v1/audit_logs?page=1&per_page=20",
-              "host": ["{{audit_url}}"],
+              "raw": "http://localhost:3003/api/v1/audit_logs?page=1&per_page=20",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3003",
               "path": ["api", "v1", "audit_logs"],
               "query": [
                 {
@@ -298,18 +390,20 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "Bearer {{token_audit}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{audit_url}}/api/v1/audit_logs/by_entity?entity=Client&entity_id=1",
-              "host": ["{{audit_url}}"],
+              "raw": "http://localhost:3003/api/v1/audit_logs/by_entity?entity=Invoice&entity_id=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3003",
               "path": ["api", "v1", "audit_logs", "by_entity"],
               "query": [
                 {
                   "key": "entity",
-                  "value": "Client"
+                  "value": "Invoice"
                 },
                 {
                   "key": "entity_id",
@@ -326,13 +420,15 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
+                "value": "Bearer {{token_audit}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{audit_url}}/api/v1/audit_logs/1",
-              "host": ["{{audit_url}}"],
+              "raw": "http://localhost:3003/api/v1/audit_logs/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3003",
               "path": ["api", "v1", "audit_logs", "1"]
             }
           }

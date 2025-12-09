@@ -8,7 +8,7 @@
       "_id": "wrk_1",
       "_type": "workspace",
       "name": "FactuMarket - Microservicios",
-      "description": "Workspace para probar los 3 microservicios con autenticación JWT",
+      "description": "Workspace para probar los 3 microservicios con autenticación JWT independiente",
       "scope": "design"
     },
     {
@@ -17,14 +17,12 @@
       "parentId": "wrk_1",
       "name": "Development",
       "data": {
-        "clients_url": "http://localhost:3001",
-        "invoices_url": "http://localhost:3002",
-        "audit_url": "http://localhost:3003",
-        "jwt_token": "",
-        "api_client_id": "1"
+        "token_clients": "",
+        "token_invoices": "",
+        "token_audit": ""
       },
       "dataPropertyOrder": {
-        "&": ["clients_url", "invoices_url", "audit_url", "jwt_token", "api_client_id"]
+        "&": ["token_clients", "token_invoices", "token_audit"]
       },
       "color": null,
       "isPrivate": false,
@@ -40,15 +38,15 @@
       "environment": {}
     },
     {
-      "_id": "req_auth_token",
+      "_id": "req_auth_clients",
       "_type": "request",
       "parentId": "fld_auth",
-      "name": "Obtener JWT Token",
-      "url": "{{ _.clients_url }}/api/v1/authenticate",
+      "name": "Auth - Clients Service",
+      "url": "http://localhost:3001/api/v1/authenticate",
       "method": "POST",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"api_client_id\": {{ _.api_client_id }}\n}"
+        "text": "{\n  \"api_client_id\": 1\n}"
       },
       "parameters": [],
       "headers": [
@@ -59,7 +57,51 @@
       ],
       "authentication": {},
       "metaSortKey": 1,
-      "description": "Obtiene un JWT token usando el ApiClient ID.\n\nNOTA: El API Client se crea automáticamente cuando ejecutas:\n./bin/start.sh\n\nAPI Key generada en los seeds:\n✅ API Client created: Default API Client\n   API Key: cf748e82fecc6eb55e362fa623c6a4addf72f26cb3179c3f6d665f2730091e5c\n\nPuedes obtener el token también desde la consola:\ndocker-compose exec clients_service bundle exec rails console\napi_client = ApiClient.first\ntoken = JsonWebToken.encode(api_client_id: api_client.id)\nputs token"
+      "description": "Obtiene JWT token para Clients Service (Puerto 3001)"
+    },
+    {
+      "_id": "req_auth_invoices",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Auth - Invoices Service",
+      "url": "http://localhost:3002/api/v1/authenticate",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"api_client_id\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 2,
+      "description": "Obtiene JWT token para Invoices Service (Puerto 3002)"
+    },
+    {
+      "_id": "req_auth_audit",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Auth - Audit Service",
+      "url": "http://localhost:3003/api/v1/authenticate",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"api_client_id\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 3,
+      "description": "Obtiene JWT token para Audit Service (Puerto 3003)"
     },
     {
       "_id": "fld_clients",
@@ -73,14 +115,14 @@
       "_type": "request",
       "parentId": "fld_clients",
       "name": "Listar Clientes",
-      "url": "{{ _.clients_url }}/api/v1/clients",
+      "url": "http://localhost:3001/api/v1/clients",
       "method": "GET",
       "body": {},
       "parameters": [],
       "headers": [
         {
           "name": "Authorization",
-          "value": "Bearer {{ _.jwt_token }}"
+          "value": "Bearer {{ _.token_clients }}"
         }
       ],
       "authentication": {},
@@ -91,7 +133,7 @@
       "_type": "request",
       "parentId": "fld_clients",
       "name": "Crear Cliente",
-      "url": "{{ _.clients_url }}/api/v1/clients",
+      "url": "http://localhost:3001/api/v1/clients",
       "method": "POST",
       "body": {
         "mimeType": "application/json",
@@ -105,7 +147,7 @@
         },
         {
           "name": "Authorization",
-          "value": "Bearer {{ _.jwt_token }}"
+          "value": "Bearer {{ _.token_clients }}"
         }
       ],
       "authentication": {},
@@ -116,14 +158,14 @@
       "_type": "request",
       "parentId": "fld_clients",
       "name": "Obtener Cliente por ID",
-      "url": "{{ _.clients_url }}/api/v1/clients/1",
+      "url": "http://localhost:3001/api/v1/clients/1",
       "method": "GET",
       "body": {},
       "parameters": [],
       "headers": [
         {
           "name": "Authorization",
-          "value": "Bearer {{ _.jwt_token }}"
+          "value": "Bearer {{ _.token_clients }}"
         }
       ],
       "authentication": {},
@@ -134,14 +176,14 @@
       "_type": "request",
       "parentId": "fld_clients",
       "name": "Buscar Cliente por NIT",
-      "url": "{{ _.clients_url }}/api/v1/clients/search_by_nit?nit=900123456-7",
+      "url": "http://localhost:3001/api/v1/clients/search_by_nit?nit=900123456-7",
       "method": "GET",
       "body": {},
       "parameters": [],
       "headers": [
         {
           "name": "Authorization",
-          "value": "Bearer {{ _.jwt_token }}"
+          "value": "Bearer {{ _.token_clients }}"
         }
       ],
       "authentication": {},
@@ -159,14 +201,14 @@
       "_type": "request",
       "parentId": "fld_invoices",
       "name": "Listar Facturas",
-      "url": "{{ _.invoices_url }}/api/v1/invoices",
+      "url": "http://localhost:3002/api/v1/invoices",
       "method": "GET",
       "body": {},
       "parameters": [],
       "headers": [
         {
           "name": "Authorization",
-          "value": "Bearer {{ _.jwt_token }}"
+          "value": "Bearer {{ _.token_invoices }}"
         }
       ],
       "authentication": {},
@@ -177,7 +219,7 @@
       "_type": "request",
       "parentId": "fld_invoices",
       "name": "Crear Factura",
-      "url": "{{ _.invoices_url }}/api/v1/invoices",
+      "url": "http://localhost:3002/api/v1/invoices",
       "method": "POST",
       "body": {
         "mimeType": "application/json",
@@ -191,7 +233,7 @@
         },
         {
           "name": "Authorization",
-          "value": "Bearer {{ _.jwt_token }}"
+          "value": "Bearer {{ _.token_invoices }}"
         }
       ],
       "authentication": {},
@@ -202,14 +244,14 @@
       "_type": "request",
       "parentId": "fld_invoices",
       "name": "Obtener Factura por ID",
-      "url": "{{ _.invoices_url }}/api/v1/invoices/1",
+      "url": "http://localhost:3002/api/v1/invoices/1",
       "method": "GET",
       "body": {},
       "parameters": [],
       "headers": [
         {
           "name": "Authorization",
-          "value": "Bearer {{ _.jwt_token }}"
+          "value": "Bearer {{ _.token_invoices }}"
         }
       ],
       "authentication": {},
@@ -220,7 +262,7 @@
       "_type": "request",
       "parentId": "fld_invoices",
       "name": "Actualizar Factura",
-      "url": "{{ _.invoices_url }}/api/v1/invoices/1",
+      "url": "http://localhost:3002/api/v1/invoices/1",
       "method": "PUT",
       "body": {
         "mimeType": "application/json",
@@ -234,7 +276,7 @@
         },
         {
           "name": "Authorization",
-          "value": "Bearer {{ _.jwt_token }}"
+          "value": "Bearer {{ _.token_invoices }}"
         }
       ],
       "authentication": {},
@@ -252,14 +294,14 @@
       "_type": "request",
       "parentId": "fld_audit",
       "name": "Listar Logs de Auditoría",
-      "url": "{{ _.audit_url }}/api/v1/audit_logs?page=1&per_page=20",
+      "url": "http://localhost:3003/api/v1/audit_logs?page=1&per_page=20",
       "method": "GET",
       "body": {},
       "parameters": [],
       "headers": [
         {
           "name": "Authorization",
-          "value": "Bearer {{ _.jwt_token }}"
+          "value": "Bearer {{ _.token_audit }}"
         }
       ],
       "authentication": {},
@@ -270,14 +312,14 @@
       "_type": "request",
       "parentId": "fld_audit",
       "name": "Logs por Entidad",
-      "url": "{{ _.audit_url }}/api/v1/audit_logs/by_entity?entity=Client&entity_id=1",
+      "url": "http://localhost:3003/api/v1/audit_logs/by_entity?entity=Invoice&entity_id=1",
       "method": "GET",
       "body": {},
       "parameters": [],
       "headers": [
         {
           "name": "Authorization",
-          "value": "Bearer {{ _.jwt_token }}"
+          "value": "Bearer {{ _.token_audit }}"
         }
       ],
       "authentication": {},
@@ -288,14 +330,14 @@
       "_type": "request",
       "parentId": "fld_audit",
       "name": "Obtener Log por ID",
-      "url": "{{ _.audit_url }}/api/v1/audit_logs/1",
+      "url": "http://localhost:3003/api/v1/audit_logs/1",
       "method": "GET",
       "body": {},
       "parameters": [],
       "headers": [
         {
           "name": "Authorization",
-          "value": "Bearer {{ _.jwt_token }}"
+          "value": "Bearer {{ _.token_audit }}"
         }
       ],
       "authentication": {},
