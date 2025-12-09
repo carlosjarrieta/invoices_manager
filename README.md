@@ -174,6 +174,75 @@ curl -X GET "http://localhost:3003/api/v1/audit_logs/by_entity?entity=Invoice&en
   -H "Authorization: Bearer TU_TOKEN_JWT"
 ```
 
+## 🔍 Cómo Funciona la Auditoría Automática
+
+Cuando creas una factura en `invoices_service`, **automáticamente** se crea una entrada en MongoDB:
+
+### **Flujo:**
+
+1. **Usuario crea una factura**
+   ```bash
+   POST http://localhost:3002/api/v1/invoices
+   Body: {"client_id": 1, "amount": 2500000, "issue_date": "2024-12-09"}
+   ```
+
+2. **El CreateInvoice Use Case ejecuta:**
+   - Valida los datos
+   - Verifica que el cliente exista (consulta clients_service)
+   - Guarda en Oracle
+   - **Automáticamente llama a AuditAdapter**
+
+3. **AuditAdapter envía HTTP POST a audit_service:**
+   ```
+   POST http://audit_service:3000/api/v1/audit_logs
+   Body: {
+     "action": "Invoice created",
+     "entity": "Invoice",
+     "entity_id": "1",
+     "details": {
+       "id": 1,
+       "client_id": 1,
+       "amount": 2500000
+     },
+     "ip_address": "192.168.65.1",
+     "status": "SUCCESS"
+   }
+   ```
+
+4. **audit_service guarda en MongoDB:**
+   ```json
+   {
+     "_id": ObjectId("..."),
+     "action": "Invoice created",
+     "entity": "Invoice",
+     "entity_id": "1",
+     "details": { "id": 1, "client_id": 1, "amount": 2500000 },
+     "ip_address": "192.168.65.1",
+     "status": "SUCCESS",
+     "created_at": "2024-12-09T09:30:00.000Z"
+   }
+   ```
+
+### **Características:**
+
+- ✅ **Asíncrono**: No bloquea la respuesta al usuario (usa Thread)
+- ✅ **Resiliente**: Si falla la auditoría, no afecta la factura
+- ✅ **Completo**: Registra éxitos y errores
+- ✅ **Consultable**: Puedes ver todos los logs por entidad
+
+### **Para Ver los Logs de una Factura:**
+
+```bash
+# Obtener token del audit service
+TOKEN=$(curl -s -X POST http://localhost:3003/api/v1/authenticate \
+  -H "Content-Type: application/json" \
+  -d '{"api_client_id": 1}' | grep -o '"token":"[^"]*"' | cut -d'"' -f4)
+
+# Ver logs de la factura #1
+curl -X GET "http://localhost:3003/api/v1/audit_logs/by_entity?entity=Invoice&entity_id=1" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
 ## 📁 Estructura del Proyecto
 
 ```
