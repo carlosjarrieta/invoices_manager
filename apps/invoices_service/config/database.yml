@@ -3,7 +3,7 @@ default: &default
   adapter: oracle_enhanced
   host: <%= ENV.fetch("ORACLE_HOST", "localhost") %>
   port: <%= ENV.fetch("ORACLE_PORT", "1521") %>
-  database: <%= ENV.fetch("ORACLE_DATABASE", "XEPDB1") %>
+  database: <%= ENV.fetch("ORACLE_DATABASE", "FREEPDB1") %>
   username: <%= ENV.fetch("ORACLE_USERNAME", "system") %>
   password: <%= ENV.fetch("ORACLE_PASSWORD", "password123") %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
@@ -13,7 +13,7 @@ development:
 
 test:
   <<: *default
-  database: <%= ENV.fetch("ORACLE_DATABASE", "XEPDB1") %>
+  database: <%= ENV.fetch("ORACLE_DATABASE", "FREEPDB1") %>
 
 production:
   <<: *default

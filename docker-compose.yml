@@ -15,7 +15,7 @@ services:
       - RAILS_ENV=development
       - ORACLE_HOST=oracle-db
       - ORACLE_PORT=1521
-      - ORACLE_DATABASE=XEPDB1
+      - ORACLE_DATABASE=FREEPDB1
       - ORACLE_USERNAME=system
       - ORACLE_PASSWORD=password123
       - AUDIT_SERVICE_URL=http://audit_service:3000
@@ -38,7 +38,7 @@ services:
       - RAILS_ENV=development
       - ORACLE_HOST=oracle-db
       - ORACLE_PORT=1521
-      - ORACLE_DATABASE=XEPDB1
+      - ORACLE_DATABASE=FREEPDB1
       - ORACLE_USERNAME=system
       - ORACLE_PASSWORD=password123
       # Comunicación entre servicios
