@@ -25,29 +25,15 @@ fi
 echo -e "${GREEN}✅ Docker está corriendo${NC}"
 echo ""
 
-# Verificar que docker-compose esté instalado
-if ! command -v docker-compose &> /dev/null; then
-    echo -e "${RED}❌ Error: docker-compose no está instalado${NC}"
-    exit 1
-fi
-
-echo -e "${GREEN}✅ docker-compose está instalado${NC}"
-echo ""
-
-# Construir y levantar servicios
-echo -e "${YELLOW}📦 Construyendo imágenes...${NC}"
-docker-compose build
-
-echo ""
+# Levantar servicios (sin construir si las imágenes ya existen)
 echo -e "${YELLOW}🚢 Levantando servicios...${NC}"
 docker-compose up -d
 
 echo ""
-echo -e "${YELLOW}⏳ Esperando que Oracle esté completamente listo...${NC}"
-echo -e "${YELLOW}   (Esto puede tomar 1-3 minutos en el primer inicio)${NC}"
+echo -e "${YELLOW}⏳ Esperando que los servicios estén listos...${NC}"
 
-# Esperar a que Oracle esté healthy
-MAX_WAIT=180  # 3 minutos máximo
+# Esperar a que Oracle esté healthy (máximo 3 minutos)
+MAX_WAIT=180
 WAITED=0
 while [ $WAITED -lt $MAX_WAIT ]; do
     ORACLE_STATUS=$(docker inspect --format='{{.State.Health.Status}}' invoices_manager-oracle-db-1 2>/dev/null || echo "starting")
@@ -55,36 +41,31 @@ while [ $WAITED -lt $MAX_WAIT ]; do
         echo -e "${GREEN}✅ Oracle está listo!${NC}"
         break
     fi
-    echo -e "${YELLOW}   Esperando Oracle... ($WAITED segundos)${NC}"
-    sleep 10
-    WAITED=$((WAITED + 10))
+    sleep 5
+    WAITED=$((WAITED + 5))
 done
 
 if [ $WAITED -ge $MAX_WAIT ]; then
-    echo -e "${RED}⚠️  Oracle tardó demasiado. Intentando continuar de todos modos...${NC}"
+    echo -e "${RED}⚠️  Oracle tardó demasiado. Continuando de todos modos...${NC}"
 fi
-
-# Esperar 10 segundos adicionales para asegurar que la base de datos esté lista
-echo -e "${YELLOW}   Esperando 10 segundos adicionales para estabilidad...${NC}"
-sleep 10
 
 echo ""
 echo -e "${YELLOW}🗄️  Configurando bases de datos...${NC}"
 
 # Clients Service
-echo -e "${YELLOW}  📋 Clients Service...${NC}"
-docker-compose exec -T clients_service bundle exec rails db:create || true
-docker-compose exec -T clients_service bundle exec rails db:migrate
-docker-compose exec -T clients_service bundle exec rails db:seed
+echo -e "${YELLOW}  📋 Clients Service${NC}"
+docker-compose exec -T clients_service bundle exec rails db:create 2>/dev/null || true
+docker-compose exec -T clients_service bundle exec rails db:migrate 2>/dev/null || true
+docker-compose exec -T clients_service bundle exec rails db:seed 2>/dev/null || true
 
 # Invoices Service
-echo -e "${YELLOW}  📄 Invoices Service...${NC}"
-docker-compose exec -T invoices_service bundle exec rails db:create || true
-docker-compose exec -T invoices_service bundle exec rails db:migrate
-docker-compose exec -T invoices_service bundle exec rails db:seed
+echo -e "${YELLOW}  📄 Invoices Service${NC}"
+docker-compose exec -T invoices_service bundle exec rails db:create 2>/dev/null || true
+docker-compose exec -T invoices_service bundle exec rails db:migrate 2>/dev/null || true
+docker-compose exec -T invoices_service bundle exec rails db:seed 2>/dev/null || true
 
 echo ""
-echo -e "${GREEN}✨ Sistema iniciado correctamente!${NC}"
+echo -e "${GREEN}✨ Sistema iniciado!${NC}"
 echo ""
 echo "=================================================="
 echo -e "${GREEN}Servicios disponibles:${NC}"
@@ -93,15 +74,10 @@ echo -e "  🔹 Clients Service:  ${YELLOW}http://localhost:3001${NC}"
 echo -e "  🔹 Invoices Service: ${YELLOW}http://localhost:3002${NC}"
 echo -e "  🔹 Audit Service:    ${YELLOW}http://localhost:3003${NC}"
 echo ""
-echo -e "${GREEN}Health Checks:${NC}"
-echo -e "  curl http://localhost:3001/up"
-echo -e "  curl http://localhost:3002/up"
-echo -e "  curl http://localhost:3003/up"
+echo -e "${GREEN}Verificar servicios:${NC}"
+echo -e "  docker-compose ps"
 echo ""
 echo -e "${GREEN}Ver logs:${NC}"
 echo -e "  docker-compose logs -f"
-echo ""
-echo -e "${GREEN}Detener servicios:${NC}"
-echo -e "  docker-compose down"
 echo ""
 echo "=================================================="

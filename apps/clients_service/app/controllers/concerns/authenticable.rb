@@ -13,8 +13,9 @@ module Authenticable
 
     begin
       @decoded = JsonWebToken.decode(token)
-    rescue ActiveRecord::RecordNotFound, JWT::DecodeError
-      render json: { errors: I18n.t('api.errors.unauthorized') }, status: :unauthorized
+      ApiClient.find(@decoded[:api_client_id])
+    rescue StandardError => e
+      render json: { errors: 'Unauthorized' }, status: :unauthorized
     end
   end
 end

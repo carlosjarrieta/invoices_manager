@@ -13,11 +13,9 @@ module Authenticable
 
     begin
       @decoded = JsonWebToken.decode(token)
-      # Validate that the api_client_id exists in the database
-      api_client = ApiClient.find_by(id: @decoded[:api_client_id])
-      raise ActiveRecord::RecordNotFound unless api_client
-    rescue ActiveRecord::RecordNotFound, JWT::DecodeError
-      render json: { errors: I18n.t('api.errors.unauthorized') }, status: :unauthorized
+      ApiClient.find(@decoded[:api_client_id])
+    rescue StandardError => e
+      render json: { errors: 'Unauthorized' }, status: :unauthorized
     end
   end
 end

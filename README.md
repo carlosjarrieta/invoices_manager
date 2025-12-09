@@ -61,41 +61,42 @@ He implementado **3 microservicios independientes** que se comunican entre sí:
 - Mínimo 4GB de RAM disponible
 - Puertos libres: 3001, 3002, 3003, 1521, 27017
 
-### Paso 1: Clonar y Entrar al Proyecto
+### Opción 1: Inicio Rápido (Recomendado)
 
 ```bash
-git clone <url-del-repositorio>
-cd invoices_manager
-```
-
-### Paso 2: Levantar los Servicios
-
-```bash
-# Levantar todos los servicios (construcción automática)
 ./bin/start.sh
 ```
 
-Este script:
-1. ✅ Construye las imágenes Docker
-2. ✅ Levanta Oracle DB, MongoDB y los 3 microservicios
-3. ✅ Espera a que Oracle esté completamente listo (1-3 minutos)
-4. ✅ Crea las bases de datos
-5. ✅ Ejecuta las migraciones
-6. ✅ Carga datos de prueba
+**Tiempo**: ~2-3 minutos en el primer inicio (incluye construcción de imágenes)
 
-### Paso 3: Verificar que Todo Funcione
+Este script:
+1. Levanta todos los servicios
+2. Espera a que Oracle esté listo
+3. Crea y migra las bases de datos
+4. Carga datos de prueba
+
+### Opción 2: Reinicio Rápido (Después del primer inicio)
+
+Si ya has ejecutado `start.sh` una vez, puedes usar:
 
 ```bash
-# Ver estado de los contenedores
-docker-compose ps
-
-# Health checks
-curl http://localhost:3001/up  # Clients Service
-curl http://localhost:3002/up  # Invoices Service
-curl http://localhost:3003/up  # Audit Service
+./bin/quick-start.sh
 ```
 
-Deberías ver respuestas con fondo verde (funcionando).
+**Tiempo**: ~10 segundos (solo levanta servicios, sin reconstruir imágenes)
+
+### Opción 3: Manual
+
+```bash
+# Levantar servicios
+docker-compose up -d
+
+# Esperar a que Oracle esté listo (ver logs)
+docker-compose logs -f oracle-db
+
+# Crear y migrar bases de datos
+./bin/migrate.sh
+```
 
 ## 🧪 Cómo Probar el Sistema
 
