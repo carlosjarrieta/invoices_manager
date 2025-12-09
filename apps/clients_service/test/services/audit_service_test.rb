@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'net/http'
 
 class AuditServiceTest < ActiveSupport::TestCase
   setup do

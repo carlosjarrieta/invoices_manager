@@ -127,6 +127,8 @@ GEM
     method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.26.2)
+    mocha (2.8.2)
+      ruby2_keywords (>= 0.0.5)
     msgpack (1.8.0)
     mutex_m (0.3.0)
     net-imap (0.5.12)
@@ -203,6 +205,7 @@ GEM
       io-console (~> 0.5)
     ruby-oci8 (2.2.14)
     ruby-plsql (0.8.0)
+    ruby2_keywords (0.0.5)
     securerandom (0.4.1)
     stringio (3.1.9)
     thor (1.4.0)
@@ -224,6 +227,7 @@ DEPENDENCIES
   bootsnap
   debug
   jwt (~> 2.7)
+  mocha
   pry-rails
   puma (>= 5.0)
   rails (~> 7.1.6)

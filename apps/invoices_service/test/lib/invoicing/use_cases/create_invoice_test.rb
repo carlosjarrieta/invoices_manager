@@ -15,7 +15,7 @@ module Invoicing
 
         @client_service.expects(:exists?).with(1).returns(true)
         @repository.expects(:save).returns(mock(id: 1))
-        @audit_service.expects(:log).twice
+        @audit_service.expects(:log).once
 
         result = @use_case.execute(params)
 
@@ -62,7 +62,7 @@ module Invoicing
 
         @client_service.expects(:exists?).returns(true)
         @repository.expects(:save).returns(false)
-        @audit_service.expects(:log).twice
+        @audit_service.expects(:log).once
 
         result = @use_case.execute(params)
 

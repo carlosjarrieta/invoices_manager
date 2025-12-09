@@ -529,13 +529,13 @@ He implementado pruebas unitarias completas en la capa de dominio de todos los m
 **Ejecutar pruebas:**
 ```bash
 # Servicio de facturas
-cd apps/invoices_service && rails test test/lib/invoicing/
+docker-compose exec invoices_service bundle exec rails test test/lib/invoicing/
 
 # Servicio de clientes  
-cd apps/clients_service && rails test test/models/ test/services/
+docker-compose exec clients_service bundle exec rails test test/models/ test/services/
 
 # Servicio de auditoría
-cd apps/audit_service && rails test test/models/
+docker-compose exec audit_service bundle exec rails test test/models/
 ```
 
 Las pruebas usan `mocha` para mocks y no dependen de bases de datos externas.
