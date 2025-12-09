@@ -47,14 +47,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"api_client_id\": {{api_client_id}}\n}"
+              "raw": "{\n  \"api_client_id\": {{api_client_id}}\n}\n\nO si prefieres usar la API Key:\n{\n  \"api_key\": \"cf748e82fecc6eb55e362fa623c6a4addf72f26cb3179c3f6d665f2730091e5c\"\n}"
             },
             "url": {
               "raw": "{{clients_url}}/api/v1/authenticate",
               "host": ["{{clients_url}}"],
               "path": ["api", "v1", "authenticate"]
             },
-            "description": "Obtiene un JWT token usando el ApiClient ID.\n\nNOTA: El API Client se crea automáticamente cuando ejecutas:\n./bin/start.sh\n\nAPI Key generada en los seeds:\n✅ API Client created: Default API Client\n   API Key: cf748e82fecc6eb55e362fa623c6a4addf72f26cb3179c3f6d665f2730091e5c\n\nPuedes obtener el token también desde la consola:\ndocker-compose exec clients_service bundle exec rails console\napi_client = ApiClient.first\ntoken = JsonWebToken.encode(api_client_id: api_client.id)\nputs token"
+            "description": "Obtiene un JWT token usando:\n- api_client_id: 1 (ID del cliente)\n- O api_key: <key> (API Key mostrada en los seeds)\n\nCuando ejecutas ./bin/start.sh ves:\n✅ API Client created: Default API Client\n   API Key: cf748e82fecc6eb55e362fa623c6a4addf72f26cb3179c3f6d665f2730091e5c\n\nPuedes usar CUALQUIERA de estos dos formatos:\n\n1. Con api_client_id:\n   {\"api_client_id\": 1}\n\n2. Con api_key:\n   {\"api_key\": \"cf748e82fecc6eb55e362fa623c6a4addf72f26cb3179c3f6d665f2730091e5c\"}\n\nAmbos generarán el mismo JWT token"
           },
           "event": [
             {
