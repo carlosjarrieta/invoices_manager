@@ -19,6 +19,7 @@ services:
       - ORACLE_USERNAME=system
       - ORACLE_PASSWORD=password123
       - AUDIT_SERVICE_URL=http://audit_service:3000
+      - NLS_LANG=AMERICAN_AMERICA.AL32UTF8
     depends_on:
       - oracle-db
       - audit_service
@@ -43,6 +44,7 @@ services:
       # Comunicación entre servicios
       - CLIENTS_SERVICE_URL=http://clients_service:3000
       - AUDIT_SERVICE_URL=http://audit_service:3000
+      - NLS_LANG=AMERICAN_AMERICA.AL32UTF8
     depends_on:
       - oracle-db
       - clients_service

@@ -1,12 +1,17 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
+puts "🔐 Clients Service - Seed Data"
+puts "=" * 50
+
 # Create API Client for authentication
 api_client = ApiClient.find_or_create_by!(name: 'Default API Client') do |client|
-  client.api_key = 'your-secret-api-key-here'
+  client.api_key = SecureRandom.hex(32)
 end
 
-puts "API Client created: #{api_client.name} (API Key: #{api_client.api_key})"
+puts "✅ API Client created: #{api_client.name}"
+puts "   API Key: #{api_client.api_key}"
+puts ""
 
 # Create sample clients
 clients = [
@@ -19,13 +24,21 @@ clients = [
   },
   {
     company_name: 'Tech Solutions Colombia',
-    nit: '800987654-3',
-    email: 'info@techsolutions.co',
-    address: 'Carrera 15 #88-22, Medellín',
-    phone: '3009876543'
+    nit: '900234567-8',
+    email: 'info@techsolutions.com',
+    address: 'Carrera 11 #89-12, Medellín',
+    phone: '3109876543'
+  },
+  {
+    company_name: 'Servicios Integrales Ltda',
+    nit: '900345678-9',
+    email: 'servicio@integral.com',
+    address: 'Calle 50 #10-20, Cali',
+    phone: '3021234567'
   }
 ]
 
+puts "📝 Creating sample clients..."
 clients.each do |client_data|
   Client.find_or_create_by!(nit: client_data[:nit]) do |client|
     client.company_name = client_data[:company_name]
@@ -33,7 +46,15 @@ clients.each do |client_data|
     client.address = client_data[:address]
     client.phone = client_data[:phone]
   end
-  puts "Client created: #{client_data[:company_name]}"
+  puts "   ✅ #{client_data[:company_name]}"
 end
 
-puts "Seed data loaded successfully!"
+puts ""
+puts "🔐 Para usar la API, genera un token JWT:"
+puts "   rails console"
+puts "   api_client = ApiClient.first"
+puts "   token = JsonWebToken.encode(api_client_id: api_client.id)"
+puts "   puts token"
+puts ""
+puts "=" * 50
+puts "✨ Seed data loaded successfully!"
