@@ -384,6 +384,130 @@ end
 - ✅ **Mantenibilidad**: Cambios en una capa no afectan otras
 - ✅ **Escalabilidad**: Fácil agregar nuevas funcionalidades
 
+## 📊 Diagrama de Arquitectura de Alto Nivel
+
+### Descripción de la Arquitectura
+
+El sistema está diseñado con una **arquitectura de microservicios** completamente containerizada usando Docker. A continuación, describo los componentes principales y sus interacciones:
+
+#### Componentes Principales
+
+1. **Microservicios**:
+   - **Clients Service**: Gestiona clientes (CRUD, búsqueda por NIT)
+   - **Invoices Service**: Gestiona facturas (CRUD, filtros por fecha)
+   - **Audit Service**: Centraliza logs de auditoría
+
+2. **Bases de Datos**:
+   - **Oracle Database 23c Free**: Almacena datos transaccionales (clientes y facturas)
+   - **MongoDB**: Almacena logs de auditoría en documentos JSON
+
+3. **Infraestructura**:
+   - **Docker Compose**: Orquestación de contenedores
+   - **JWT**: Autenticación entre servicios
+   - **HTTP/REST**: Comunicación entre microservicios
+
+#### Flujo de Comunicación
+
+```
+Usuario/API Client
+       │
+       ▼
+   ┌─────────────┐    HTTP GET     ┌─────────────┐
+   │             │◄────────────────┤             │
+   │Invoices     │                 │  Clients    │
+   │Service      │────────────────►│  Service    │
+   │(Puerto 3002)│    HTTP POST    │(Puerto 3001)│
+   └─────────────┘                 └─────────────┘
+       │                                   │
+       │ HTTP POST                        │ HTTP POST
+       ▼                                   ▼
+   ┌─────────────┐                 ┌─────────────┐
+   │             │◄────────────────┤             │
+   │   Audit     │                 │   Oracle    │
+   │  Service    │                 │   Database  │
+   │(Puerto 3003)│                 │   (PDB)     │
+   └─────────────┘                 └─────────────┘
+       │
+       ▼
+   ┌─────────────┐
+   │             │
+   │   MongoDB   │
+   │   Database  │
+   └─────────────┘
+```
+
+#### Diagrama en Capas (Clean Architecture)
+
+```
+┌─────────────────────────────────────────────────┐
+│                PRESENTATION LAYER               │
+│  ┌─────────────────────────────────────────┐    │
+│  │         Controllers & Routes           │    │
+│  │  - API Endpoints (REST/JSON)           │    │
+│  │  - Authentication (JWT)                │    │
+│  └─────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────┘
+                        │
+                        ▼
+┌─────────────────────────────────────────────────┐
+│               APPLICATION LAYER                 │
+│  ┌─────────────────────────────────────────┐    │
+│  │           Use Cases / Services          │    │
+│  │  - Business Logic Orchestration         │    │
+│  │  - Cross-Service Communication          │    │
+│  │  - Validation & Error Handling          │    │
+│  └─────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────┘
+                        │
+                        ▼
+┌─────────────────────────────────────────────────┐
+│                DOMAIN LAYER                     │
+│  ┌─────────────────────────────────────────┐    │
+│  │           Entities & Rules             │    │
+│  │  - Business Entities (Invoice, Client) │    │
+│  │  - Business Rules & Validations        │    │
+│  │  - Domain Services                     │    │
+│  └─────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────┘
+                        │
+                        ▼
+┌─────────────────────────────────────────────────┐
+│              INFRASTRUCTURE LAYER               │
+│  ┌─────────────────────────────────────────┐    │
+│  │     Repositories & Gateways             │    │
+│  │  - Database Access (ActiveRecord)       │    │
+│  │  - External API Calls (HTTP)            │    │
+│  │  - Message Queues (Future)              │    │
+│  └─────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────┘
+```
+
+### Herramientas para Crear el Diagrama
+
+Puedes crear el diagrama usando cualquiera de estas herramientas gratuitas:
+
+1. **Draw.io** (recomendado): https://app.diagrams.net/
+   - Importa el diagrama desde texto usando plantillas de arquitectura
+
+2. **Lucidchart**: https://www.lucidchart.com/
+   - Tiene plantillas específicas para microservicios
+
+3. **Figma**: https://www.figma.com/
+   - Ideal para diagramas colaborativos
+
+4. **PowerPoint/Google Slides**:
+   - Usa formas básicas para crear el diagrama
+
+### Elementos Clave del Diagrama
+
+- **Contenedores Docker**: Representa cada servicio como un contenedor
+- **Flechas de Comunicación**: HTTP requests entre servicios
+- **Bases de Datos**: Oracle y MongoDB como almacenes persistentes
+- **Capas de Clean Architecture**: Solo en Invoices Service
+- **Flujo de Datos**: Usuario → API → Servicio → Base de Datos → Auditoría
+
+Este diagrama muestra cómo el sistema está desacoplado, escalable y fácil de mantener gracias a la arquitectura de microservicios.
+
 ## 🔧 Variables de Entorno
 
 ### Variables Requeridas
