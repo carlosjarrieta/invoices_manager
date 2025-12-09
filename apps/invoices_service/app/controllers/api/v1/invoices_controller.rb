@@ -10,7 +10,7 @@ module Api
         per_page = params[:per_page] || 10
         per_page = [per_page.to_i, 100].min
 
-        query = Invoice.includes(:client).order(created_at: :desc)
+        query = Invoice.order(created_at: :desc)
 
         start_date = if params[:start_date].present?
                        Date.parse(params[:start_date])
@@ -32,9 +32,7 @@ module Api
         total_pages = (total_count.to_f / per_page).ceil
 
         render json: {
-          data: invoices.as_json(include: {
-                                   client: { only: %i[id company_name email] }
-                                 }),
+          data: invoices.as_json,
           meta: {
             current_page: page.to_i,
             per_page: per_page.to_i,
@@ -69,8 +67,6 @@ module Api
 
         # 4. Return JSON response based on result
         if result[:status] == :ok
-          # Include client data in the response
-          result[:data] = result[:data].as_json(include: :client)
           render json: result, status: :created
         else
           render json: result, status: :unprocessable_content
@@ -98,7 +94,7 @@ module Api
 
       # GET /api/v1/invoices/:id
       def show
-        render json: { data: @invoice.as_json(include: :client) }
+        render json: { data: @invoice.as_json }
       end
 
       private

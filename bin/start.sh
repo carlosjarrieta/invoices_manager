@@ -49,36 +49,14 @@ if [ $WAITED -ge $MAX_WAIT ]; then
 fi
 
 echo ""
-echo -e "${YELLOW}🗄️  Configurando bases de datos (esto puede tomar 1-2 minutos)...${NC}"
+echo -e "${YELLOW}🗄️  Ejecutando migraciones y seeds...${NC}"
+./bin/migrate.sh
 
-# Clients Service
-echo -e "${YELLOW}  📋 Clients Service${NC}"
-echo "    - Ejecutando migraciones..."
-docker-compose exec -T clients_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:migrate'
-echo "    - Cargando seeds..."
-docker-compose exec -T clients_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:seed'
-
-# Invoices Service
-echo -e "${YELLOW}  📄 Invoices Service${NC}"
-echo "    - Ejecutando migraciones..."
-docker-compose exec -T invoices_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:migrate'
-echo "    - Cargando seeds..."
-docker-compose exec -T invoices_service sh -c 'ORACLE_SYSTEM_PASSWORD=password123 bundle exec rails db:seed'
-
-echo ""
-echo -e "${GREEN}✨ Sistema iniciado!${NC}"
 echo ""
 echo "=================================================="
-echo -e "${GREEN}Servicios disponibles:${NC}"
+echo -e "${GREEN}✅ Sistema listo!${NC}"
 echo ""
-echo -e "  🔹 Clients Service:  ${YELLOW}http://localhost:3001${NC}"
-echo -e "  🔹 Invoices Service: ${YELLOW}http://localhost:3002${NC}"
-echo -e "  🔹 Audit Service:    ${YELLOW}http://localhost:3003${NC}"
-echo ""
-echo -e "${GREEN}Verificar servicios:${NC}"
-echo -e "  docker-compose ps"
-echo ""
-echo -e "${GREEN}Ver logs:${NC}"
-echo -e "  docker-compose logs -f"
-echo ""
-echo "=================================================="
+echo "Servicios disponibles:"
+echo "  • Clients Service:   http://localhost:3001"
+echo "  • Invoices Service:  http://localhost:3002"
+echo "  • Audit Service:     http://localhost:3003"

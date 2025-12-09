@@ -5,7 +5,6 @@ class CreateClients < ActiveRecord::Migration[7.1]
       t.string :nit, null: false
       t.string :email, null: false
       t.string :address, null: false
-      t.string :phone
 
       t.timestamps
     end
