@@ -482,30 +482,6 @@ Usuario/API Client
 └─────────────────────────────────────────────────┘
 ```
 
-### Herramientas para Crear el Diagrama
-
-Puedes crear el diagrama usando cualquiera de estas herramientas gratuitas:
-
-1. **Draw.io** (recomendado): https://app.diagrams.net/
-   - Importa el diagrama desde texto usando plantillas de arquitectura
-
-2. **Lucidchart**: https://www.lucidchart.com/
-   - Tiene plantillas específicas para microservicios
-
-3. **Figma**: https://www.figma.com/
-   - Ideal para diagramas colaborativos
-
-4. **PowerPoint/Google Slides**:
-   - Usa formas básicas para crear el diagrama
-
-### Elementos Clave del Diagrama
-
-- **Contenedores Docker**: Representa cada servicio como un contenedor
-- **Flechas de Comunicación**: HTTP requests entre servicios
-- **Bases de Datos**: Oracle y MongoDB como almacenes persistentes
-- **Capas de Clean Architecture**: Solo en Invoices Service
-- **Flujo de Datos**: Usuario → API → Servicio → Base de Datos → Auditoría
-
 Este diagrama muestra cómo el sistema está desacoplado, escalable y fácil de mantener gracias a la arquitectura de microservicios.
 
 ## 🔧 Variables de Entorno
