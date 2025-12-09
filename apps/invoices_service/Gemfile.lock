@@ -110,6 +110,8 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
+    jwt (2.10.2)
+      base64
     logger (1.7.0)
     loofah (2.24.1)
       crass (~> 1.0.2)
@@ -214,6 +216,7 @@ DEPENDENCIES
   activerecord-oracle_enhanced-adapter (~> 7.0)
   bootsnap
   debug
+  jwt (~> 2.7)
   puma (>= 5.0)
   rails (~> 7.1.6)
   ruby-oci8 (~> 2.2)
