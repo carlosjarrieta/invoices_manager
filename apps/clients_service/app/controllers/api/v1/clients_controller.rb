@@ -2,65 +2,61 @@ module Api
   module V1
     class ClientsController < ApplicationController
       include Authenticable
-      before_action :set_client, only: [:show]
 
       # GET /api/v1/clients
       def index
-        @clients = Client.all
-        render json: { data: @clients }
+        repository = Clients::Infrastructure::ClientRepository.new
+
+        page = params[:page] || 1
+        per_page = params[:per_page] || 10
+        per_page = [per_page.to_i, 100].min
+
+        clients = repository.all(page: page, per_page: per_page)
+        total_count = repository.count
+        total_pages = (total_count.to_f / per_page).ceil
+
+        render json: {
+          data: clients,
+          meta: {
+            current_page: page.to_i,
+            per_page: per_page.to_i,
+            total_count: total_count,
+            total_pages: total_pages
+          }
+        }
       end
 
       # POST /api/v1/clients
       def create
-        @client = Client.new(client_params)
+        repository = Clients::Infrastructure::ClientRepository.new
+        audit_service = Clients::Infrastructure::AuditAdapter.new(request.remote_ip)
+        use_case = Clients::UseCases::CreateClient.new(repository, audit_service)
 
-        if @client.save
-          AuditService.log(
-            action: I18n.t('api.audit.client_created'),
-            entity: 'Client',
-            entity_id: @client.id.to_s,
-            details: { name: @client.company_name, nit: @client.nit, email: @client.email },
-            ip_address: request.remote_ip,
-            status: 'SUCCESS'
-          )
-          render json: { message: I18n.t('api.clients.created'), data: @client }, status: :created
+        result = use_case.execute(client_params)
+
+        if result[:status] == :ok
+          render json: { message: result[:message], data: result[:data] }, status: :created
         else
-          AuditService.log(
-            action: I18n.t('api.audit.client_creation_failed'),
-            entity: 'Client',
-            entity_id: nil,
-            details: { error: @client.errors.full_messages, params: client_params.to_h },
-            ip_address: request.remote_ip,
-            status: 'ERROR'
-          )
-          render json: @client.errors, status: :unprocessable_content
+          render json: { error: result[:message] }, status: :unprocessable_content
         end
       end
 
       # GET /api/v1/clients/:id
       def show
-        render json: { data: @client }
+        repository = Clients::Infrastructure::ClientRepository.new
+        @client = repository.find_by_id(params[:id])
+
+        if @client
+          render json: { data: @client }
+        else
+          render json: { error: I18n.t('api.clients.not_found') }, status: :not_found
+        end
       end
 
       # GET /api/v1/clients/search_by_nit?nit=900123456-7
       def search_by_nit
-        nit_param = params[:nit]
-
-        # Try exact match first
-        @client = Client.find_by(nit: nit_param)
-
-        # If not found and NIT doesn't have hyphen, try adding wildcard for verification digit
-        if @client.nil? && !nit_param.include?('-')
-          # Search for NIT with any verification digit (e.g., 900123456-%)
-          @client = Client.where('nit LIKE ?', "#{nit_param}-%").first
-        end
-
-        # If still not found and NIT has hyphen, try without verification digit
-        if @client.nil? && nit_param.include?('-')
-          # Remove verification digit and search (e.g., 900123456-7 -> 900123456-%)
-          base_nit = nit_param.split('-').first
-          @client = Client.where('nit LIKE ?', "#{base_nit}-%").first
-        end
+        repository = Clients::Infrastructure::ClientRepository.new
+        @client = repository.find_by_nit_flexible(params[:nit])
 
         if @client
           render json: @client
@@ -70,12 +66,6 @@ module Api
       end
 
       private
-
-      def set_client
-        @client = Client.find(params[:id])
-      rescue ActiveRecord::RecordNotFound
-        render json: { error: I18n.t('api.clients.not_found') }, status: :not_found
-      end
 
       def client_params
         params.require(:client).permit(:company_name, :nit, :email, :address)

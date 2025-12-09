@@ -32,6 +32,8 @@ en:
     clients:
       created: "Client created successfully"
       not_found: "Client not found"
+      invalid_data: "Invalid client data"
+      database_error: "Database error occurred"
     errors:
       unauthorized: "Unauthorized"
     audit:
