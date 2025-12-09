@@ -24,22 +24,19 @@ clients = [
     company_name: 'Empresa Demo S.A.S',
     nit: '900123456-7',
     email: 'contacto@empresademo.com',
-    address: 'Calle 123 #45-67, Bogotá',
-    phone: '3001234567'
+    address: 'Calle 123 #45-67, Bogotá'
   },
   {
     company_name: 'Tech Solutions Colombia',
     nit: '900234567-8',
     email: 'info@techsolutions.com',
-    address: 'Carrera 11 #89-12, Medellín',
-    phone: '3109876543'
+    address: 'Carrera 11 #89-12, Medellín'
   },
   {
     company_name: 'Servicios Integrales Ltda',
     nit: '900345678-9',
     email: 'servicio@integral.com',
     address: 'Calle 50 #10-20, Cali',
-    phone: '3021234567'
   }
 ]
 
@@ -49,7 +46,6 @@ clients.each do |client_data|
     client.company_name = client_data[:company_name]
     client.email = client_data[:email]
     client.address = client_data[:address]
-    client.phone = client_data[:phone]
   end
   puts "   ✅ #{client_data[:company_name]}"
 end

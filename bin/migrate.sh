@@ -34,7 +34,6 @@ echo ""
 
 # Clients Service
 echo -e "${YELLOW}📋 Migrando Clients Service...${NC}"
-docker-compose exec -T clients_service bundle exec rails db:create || true
 docker-compose exec -T clients_service bundle exec rails db:migrate
 docker-compose exec -T clients_service bundle exec rails db:seed
 echo -e "${GREEN}✅ Clients Service migrado${NC}"
@@ -42,7 +41,6 @@ echo ""
 
 # Invoices Service
 echo -e "${YELLOW}📄 Migrando Invoices Service...${NC}"
-docker-compose exec -T invoices_service bundle exec rails db:create || true
 docker-compose exec -T invoices_service bundle exec rails db:migrate
 docker-compose exec -T invoices_service bundle exec rails db:seed
 echo -e "${GREEN}✅ Invoices Service migrado${NC}"

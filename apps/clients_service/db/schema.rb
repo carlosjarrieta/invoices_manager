@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_09_100001) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_09_000001) do
   create_table "api_clients", force: :cascade do |t|
     t.string "name", null: false
     t.string "api_key", null: false
@@ -36,7 +36,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_09_100001) do
     t.string "nit", null: false
     t.string "email", null: false
     t.string "address", null: false
-    t.string "phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_clients_on_email", unique: true
@@ -47,19 +46,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_09_100001) do
     t.string "topic", limit: 50, null: false
     t.decimal "seq", null: false
     t.string "info", limit: 80
-  end
-
-  create_table "invoices", force: :cascade do |t|
-    t.integer "client_id", precision: 38, null: false
-    t.decimal "amount", precision: 10, scale: 2, null: false
-    t.date "issue_date", null: false
-    t.string "status", default: "pending"
-    t.text "notes"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["client_id"], name: "index_invoices_on_client_id"
-    t.index ["issue_date"], name: "index_invoices_on_issue_date"
-    t.index ["status"], name: "index_invoices_on_status"
   end
 
   create_table "mview$_adv_ajg", primary_key: "ajgid#", id: :decimal, comment: "Anchor-join graph representation", force: :cascade do |t|

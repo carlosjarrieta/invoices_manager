@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_09_100001) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_09_000001) do
   create_table "api_clients", force: :cascade do |t|
     t.string "name", null: false
     t.string "api_key", null: false
@@ -36,7 +36,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_09_100001) do
     t.string "nit", null: false
     t.string "email", null: false
     t.string "address", null: false
-    t.string "phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_clients_on_email", unique: true
