@@ -544,7 +544,10 @@ Las pruebas usan `mocha` para mocks y no dependen de bases de datos externas.
 
 Este proyecto fue desarrollado como parte de mi aplicación para el puesto de Full Stack Developer Ruby en Double V Partners NYX.
 
-**Desarrollador**: [Tu Nombre]
+**Desarrollador**: Carlos Javier Arrieta Jimenez
+**Email**: carlosj.arrieta@gmail.com
+**Celular**: 3042075846
+**Repositorio**: https://github.com/carlosjarrieta/invoices_manager
 **Fecha**: Diciembre 2025
 **Tecnologías**: Ruby 3.2.2, Rails 7.1.6, Oracle 23c, MongoDB, Docker
 
