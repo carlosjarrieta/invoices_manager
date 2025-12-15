@@ -13,7 +13,7 @@ services:
       - "3001:3000"
     environment:
       - RAILS_ENV=development
-      - ORACLE_HOST=oracle-db
+      - ORACLE_HOST=oracle-clients-db
       - ORACLE_PORT=1521
       - ORACLE_DATABASE=FREEPDB1
       - ORACLE_USERNAME=system
@@ -23,7 +23,7 @@ services:
       - NLS_LANG=AMERICAN_AMERICA.AL32UTF8
       - JWT_SECRET_KEY=shared_secret_key_for_microservices_jwt_validation
     depends_on:
-      - oracle-db
+      - oracle-clients-db
       - audit_service
 
   # Microservicio de Facturas (Core de Facturación)
@@ -38,7 +38,7 @@ services:
       - "3002:3000"
     environment:
       - RAILS_ENV=development
-      - ORACLE_HOST=oracle-db
+      - ORACLE_HOST=oracle-invoices-db
       - ORACLE_PORT=1521
       - ORACLE_DATABASE=FREEPDB1
       - ORACLE_USERNAME=system
@@ -49,7 +49,7 @@ services:
       - NLS_LANG=AMERICAN_AMERICA.AL32UTF8
       - JWT_SECRET_KEY=shared_secret_key_for_microservices_jwt_validation
     depends_on:
-      - oracle-db
+      - oracle-invoices-db
       - clients_service
       - audit_service
 
@@ -72,16 +72,32 @@ services:
     depends_on:
       - mongo-db
 
-  # Base de datos Oracle (Compartida para la Demo, pero con esquemas lógicos separados idealmente)
-  oracle-db:
+  # Base de datos Oracle para Clientes (Instancia Independiente)
+  oracle-clients-db:
     image: gvenzl/oracle-free:23-slim
     environment:
       ORACLE_PASSWORD: password123
       ORACLE_CHARACTERSET: AL32UTF8
     ports:
-      - "1521:1521"
+      - "1522:1521"
     volumes:
-      - oracle_data:/opt/oracle/oradata
+      - oracle_clients_data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Base de datos Oracle para Facturas (Instancia Independiente)
+  oracle-invoices-db:
+    image: gvenzl/oracle-free:23-slim
+    environment:
+      ORACLE_PASSWORD: password123
+      ORACLE_CHARACTERSET: AL32UTF8
+    ports:
+      - "1523:1521"
+    volumes:
+      - oracle_invoices_data:/opt/oracle/oradata
     healthcheck:
       test: ["CMD", "healthcheck.sh"]
       interval: 30s
@@ -104,5 +120,6 @@ services:
       retries: 5
 
 volumes:
-  oracle_data:
+  oracle_clients_data:
+  oracle_invoices_data:
   mongo_data:
