@@ -398,7 +398,8 @@ El sistema está diseñado con una **arquitectura de microservicios** completame
    - **Audit Service**: Centraliza logs de auditoría
 
 2. **Bases de Datos**:
-   - **Oracle Database 23c Free**: Almacena datos transaccionales (clientes y facturas)
+   - **Oracle Database 23c Free (Clientes)**: Instancia dedicada con PDB `CLIENTS_PDB`
+   - **Oracle Database 23c Free (Facturas)**: Instancia dedicada con PDB `INVOICES_PDB`
    - **MongoDB**: Almacena logs de auditoría en documentos JSON
 
 3. **Infraestructura**:
@@ -490,9 +491,11 @@ Este diagrama muestra cómo el sistema está desacoplado, escalable y fácil de 
 
 | Variable | Servicio | Valor por Defecto | Descripción |
 |----------|----------|-------------------|-------------|
-| `ORACLE_HOST` | Clients, Invoices | `oracle-db` | Host de Oracle |
+| `ORACLE_HOST` | Clients | `oracle-clients-db` | Host de Oracle para clientes |
+| `ORACLE_HOST` | Invoices | `oracle-invoices-db` | Host de Oracle para facturas |
 | `ORACLE_PORT` | Clients, Invoices | `1521` | Puerto de Oracle |
-| `ORACLE_DATABASE` | Clients, Invoices | `XEPDB1` | Nombre de BD |
+| `ORACLE_DATABASE` | Clients | `CLIENTS_PDB` | Nombre de BD para clientes |
+| `ORACLE_DATABASE` | Invoices | `INVOICES_PDB` | Nombre de BD para facturas |
 | `ORACLE_USERNAME` | Clients, Invoices | `system` | Usuario Oracle |
 | `ORACLE_PASSWORD` | Clients, Invoices | `password123` | Password Oracle |
 | `CLIENTS_SERVICE_URL` | Invoices | `http://clients_service:3000` | URL del servicio de clientes |

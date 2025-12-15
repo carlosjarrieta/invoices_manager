@@ -29,15 +29,15 @@ echo -e "${YELLOW}🚢 Levantando servicios...${NC}"
 docker-compose up -d
 
 echo ""
-echo -e "${YELLOW}⏳ Esperando que Oracle esté listo...${NC}"
+echo -e "${YELLOW}⏳ Esperando que las bases de datos Oracle estén listas...${NC}"
 
-# Esperar a Oracle
+# Esperar a Oracle para Clientes
 MAX_WAIT=180
 WAITED=0
 while [ $WAITED -lt $MAX_WAIT ]; do
-    ORACLE_STATUS=$(docker inspect --format='{{.State.Health.Status}}' invoices_manager-oracle-db-1 2>/dev/null || echo "starting")
-    if [ "$ORACLE_STATUS" = "healthy" ]; then
-        echo -e "${GREEN}✅ Oracle está listo!${NC}"
+    ORACLE_CLIENTS_STATUS=$(docker inspect --format='{{.State.Health.Status}}' invoices_manager-oracle-clients-db-1 2>/dev/null || echo "starting")
+    if [ "$ORACLE_CLIENTS_STATUS" = "healthy" ]; then
+        echo -e "${GREEN}✅ Oracle para Clientes está listo!${NC}"
         break
     fi
     sleep 5
@@ -45,7 +45,23 @@ while [ $WAITED -lt $MAX_WAIT ]; do
 done
 
 if [ $WAITED -ge $MAX_WAIT ]; then
-    echo -e "${RED}⚠️  Oracle tardó demasiado${NC}"
+    echo -e "${RED}⚠️  Oracle para Clientes tardó demasiado${NC}"
+fi
+
+# Esperar a Oracle para Facturas
+WAITED=0
+while [ $WAITED -lt $MAX_WAIT ]; do
+    ORACLE_INVOICES_STATUS=$(docker inspect --format='{{.State.Health.Status}}' invoices_manager-oracle-invoices-db-1 2>/dev/null || echo "starting")
+    if [ "$ORACLE_INVOICES_STATUS" = "healthy" ]; then
+        echo -e "${GREEN}✅ Oracle para Facturas está listo!${NC}"
+        break
+    fi
+    sleep 5
+    WAITED=$((WAITED + 5))
+done
+
+if [ $WAITED -ge $MAX_WAIT ]; then
+    echo -e "${RED}⚠️  Oracle para Facturas tardó demasiado${NC}"
 fi
 
 echo ""

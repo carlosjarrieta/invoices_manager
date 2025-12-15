@@ -15,21 +15,34 @@ echo "🗄️  Ejecutando migraciones..."
 echo "=================================================="
 echo ""
 
-# Verificar que Oracle esté healthy
-echo -e "${YELLOW}Verificando estado de Oracle...${NC}"
-ORACLE_STATUS=$(docker inspect --format='{{.State.Health.Status}}' invoices_manager-oracle-db-1 2>/dev/null || echo "not_found")
+# Verificar que las bases de datos Oracle estén healthy
+echo -e "${YELLOW}Verificando estado de las bases de datos Oracle...${NC}"
 
-if [ "$ORACLE_STATUS" != "healthy" ]; then
-    echo -e "${RED}❌ Oracle no está listo (status: $ORACLE_STATUS)${NC}"
+# Verificar Oracle para Clientes
+ORACLE_CLIENTS_STATUS=$(docker inspect --format='{{.State.Health.Status}}' invoices_manager-oracle-clients-db-1 2>/dev/null || echo "not_found")
+if [ "$ORACLE_CLIENTS_STATUS" != "healthy" ]; then
+    echo -e "${RED}❌ Oracle para Clientes no está listo (status: $ORACLE_CLIENTS_STATUS)${NC}"
     echo -e "${YELLOW}Espera a que Oracle esté healthy:${NC}"
-    echo "  docker-compose logs -f oracle-db"
+    echo "  docker-compose logs -f oracle-clients-db"
     echo ""
     echo -e "${YELLOW}O ejecuta el script completo:${NC}"
     echo "  ./bin/start.sh"
     exit 1
 fi
 
-echo -e "${GREEN}✅ Oracle está listo${NC}"
+# Verificar Oracle para Facturas
+ORACLE_INVOICES_STATUS=$(docker inspect --format='{{.State.Health.Status}}' invoices_manager-oracle-invoices-db-1 2>/dev/null || echo "not_found")
+if [ "$ORACLE_INVOICES_STATUS" != "healthy" ]; then
+    echo -e "${RED}❌ Oracle para Facturas no está listo (status: $ORACLE_INVOICES_STATUS)${NC}"
+    echo -e "${YELLOW}Espera a que Oracle esté healthy:${NC}"
+    echo "  docker-compose logs -f oracle-invoices-db"
+    echo ""
+    echo -e "${YELLOW}O ejecuta el script completo:${NC}"
+    echo "  ./bin/start.sh"
+    exit 1
+fi
+
+echo -e "${GREEN}✅ Ambas bases de datos Oracle están listas${NC}"
 echo ""
 
 # Clients Service
