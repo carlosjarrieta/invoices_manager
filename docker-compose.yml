@@ -15,7 +15,7 @@ services:
       - RAILS_ENV=development
       - ORACLE_HOST=oracle-clients-db
       - ORACLE_PORT=1521
-      - ORACLE_DATABASE=CLIENTS_PDB
+      - ORACLE_DATABASE=FREEPDB1
       - ORACLE_USERNAME=system
       - ORACLE_PASSWORD=password123
       - ORACLE_SYSTEM_PASSWORD=password123
@@ -40,7 +40,7 @@ services:
       - RAILS_ENV=development
       - ORACLE_HOST=oracle-invoices-db
       - ORACLE_PORT=1521
-      - ORACLE_DATABASE=INVOICES_PDB
+      - ORACLE_DATABASE=FREEPDB1
       - ORACLE_USERNAME=system
       - ORACLE_PASSWORD=password123
       - ORACLE_SYSTEM_PASSWORD=password123
